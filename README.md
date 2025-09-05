@@ -12,4 +12,5 @@ This project demonstrates how to:
 - SQLAlchemy for ORM-based database interaction
 - Environment variable management with python-dotenv
 - Modular project structure with routers
+
 ## 📁 Project Structure
