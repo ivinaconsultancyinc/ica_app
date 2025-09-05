@@ -1,0 +1,11 @@
+alembic
+databases
+fastapi
+jinja2
+pydantic
+python-dotenv
+sqlalchemy
+uvicorn
+pydantic[email]
+asyncpg
+psycopg2-binary
