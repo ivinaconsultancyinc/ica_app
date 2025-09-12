@@ -1,9 +1,10 @@
  services:
   - type: web
-    name: insurance-app
+    name: ica_app
     env: python
-    buildCommand: ""  # Or "pip install -r requirements.txt" if needed
-    startCommand: cd insurance_app && uvicorn insurance_app_main:app --host 0.0.0.0 --port $PORT
+    rootDir: ica_app
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn insurance_app_main:app --host 0.0.0.0 --port 8000
 routes:
   - path: /form/clients
     description: Render the Clients form template
@@ -23,8 +24,6 @@ routes:
     description: Render the Agents form template
   - path: /form/documents
     description: Render the Documents form template
-  - path: /form/audit
-    description: Render the Audit form template
   - path: /form/ledger
     description: Render the Ledger form template
   - path: /form/reinsurance
