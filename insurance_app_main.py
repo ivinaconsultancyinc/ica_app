@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+# Absolute imports based on your structure
 from routers.routers_client import router as client_router
 from routers.routers_policy import router as policy_router
 from routers.routers_product import router as product_router
@@ -13,19 +14,13 @@ from routers.routers_audit import router as audit_router
 from routers.routers_ledger import router as ledger_router
 from routers.routers_reinsurance import router as reinsurance_router
 
-from insurance_app import views
+# If you have a views.py with a router, import it as well
+try:
+    from views import router as views_router
+except ImportError:
+    views_router = None
 
 app = FastAPI(title="Insurance Company of Africa Management System")
-
-from insurance_app.database import database
-
-@app.on_event("startup")
-async def startup():
-    await database.connect()
-
-@app.on_event("shutdown")
-async def shutdown():
-    await database.disconnect()
 
 # Include routers for each module
 app.include_router(client_router, prefix="/clients", tags=["Clients"])
@@ -41,13 +36,11 @@ app.include_router(audit_router, prefix="/audit", tags=["Audit"])
 app.include_router(ledger_router, prefix="/ledger", tags=["Ledger"])
 app.include_router(reinsurance_router, prefix="/reinsurance", tags=["Reinsurance"])
 
-# Include views router for rendering templates
-app.include_router(views.router)
+# Include views router if available
+if views_router:
+    app.include_router(views_router)
 
 @app.get("/")
 def root():
     return {"message": "Welcome to the Insurance Company of Africa API"}
-
-
-
 
