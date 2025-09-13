@@ -3,7 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from insurance_app import models
-from insurance_app.schemas import agent as agent_schema
+from insurance_app.schemas import agent_schema
 
 # Configure logging
 logging.basicConfig(level=logging.ERROR)
@@ -106,6 +106,7 @@ def delete_agent(db: Session, agent_id: int):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unexpected error occurred"
         )
+
 
 
 
