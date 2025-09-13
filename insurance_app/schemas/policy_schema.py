@@ -26,3 +26,4 @@ class PolicyResponse(PolicyBase):
 
     class Config:
         from_attributes = True
+
