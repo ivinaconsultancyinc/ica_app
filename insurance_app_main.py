@@ -1,22 +1,25 @@
+import os
+print("Current working directory:", os.getcwd())
+
 from fastapi import FastAPI
 
 # Absolute imports based on your structure
-from routers.routers_client import router as client_router
-from routers.routers_policy import router as policy_router
-from routers.routers_product import router as product_router
-from routers.routers_premium import router as premium_router
-from routers.routers_commission import router as commission_router
-from routers.routers_claim import router as claim_router
-from routers.routers_customer import router as customer_router
-from routers.routers_agent import router as agent_router
-from routers.routers_document import router as document_router
-from routers.routers_audit import router as audit_router
-from routers.routers_ledger import router as ledger_router
-from routers.routers_reinsurance import router as reinsurance_router
+from insurance_app.routers.routers_client import router as client_router
+from insurance_app.routers.routers_policy import router as policy_router
+from insurance_app.routers.routers_product import router as product_router
+from insurance_app.routers.routers_premium import router as premium_router
+from insurance_app.routers.routers_commission import router as commission_router
+from insurance_app.routers.routers_claim import router as claim_router
+from insurance_app.routers.routers_customer import router as customer_router
+from insurance_app.routers.routers_agent import router as agent_router
+from insurance_app.routers.routers_document import router as document_router
+from insurance_app.routers.routers_audit import router as audit_router
+from insurance_app.routers.routers_ledger import router as ledger_router
+from insurance_app.routers.routers_reinsurance import router as reinsurance_router
 
 # If you have a views.py with a router, import it as well
 try:
-    from views import router as views_router
+    from insurance_app.views import router as views_router
 except ImportError:
     views_router = None
 
@@ -43,4 +46,3 @@ if views_router:
 @app.get("/")
 def root():
     return {"message": "Welcome to the Insurance Company of Africa API"}
-
