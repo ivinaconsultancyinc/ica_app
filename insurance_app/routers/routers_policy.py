@@ -9,19 +9,19 @@ router = APIRouter(
     prefix="/policies",
     tags=["Policies"]
 )
-@router.post("/", response_model=PolicyOut, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=PolicyResponse, status_code=status.HTTP_201_CREATED)
 def create_policy(policy: PolicyCreate, db: Session = Depends(get_db)):
     return services.policy_service.create_policy(db, policy)
-@router.get("/", response_model=List[PolicyOut])
+@router.get("/", response_model=List[PolicyResponse])
 def get_all_policies(db: Session = Depends(get_db)):
     return services.policy_service.get_all_policies(db)
-@router.get("/{policy_id}", response_model=PolicyOut)
+@router.get("/{policy_id}", response_model=PolicyResponse)
 def get_policy(policy_id: int, db: Session = Depends(get_db)):
     db_policy = services.policy_service.get_policy_by_id(db, policy_id)
     if not db_policy:
         raise HTTPException(status_code=404, detail="Policy not found")
     return db_policy
-@router.put("/{policy_id}", response_model=PolicyOut)
+@router.put("/{policy_id}", response_model=PolicyResponse)
 def update_policy(policy_id: int, policy_update: PolicyUpdate, db: Session = Depends(get_db)):
     return services.policy_service.update_policy(db, policy_id, policy_update)
 @router.delete("/{policy_id}", status_code=status.HTTP_204_NO_CONTENT)
