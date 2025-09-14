@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models.reinsurance import ReinsuranceContract
-from schemas.reinsurance_schema import ReinsuranceContractCreate
+from insurance_app.models.reinsurance import ReinsuranceContract
+from insurance_app.schemas.reinsurance_schema import ReinsuranceContractCreate
 
 def create_contract(db: Session, contract_data: ReinsuranceContractCreate) -> ReinsuranceContract:
     contract = ReinsuranceContract(**contract_data.dict())
@@ -11,6 +11,7 @@ def create_contract(db: Session, contract_data: ReinsuranceContractCreate) -> Re
 
 def get_contracts(db: Session, skip: int = 0, limit: int = 100):
     return db.query(ReinsuranceContract).offset(skip).limit(limit).all()
+
 
 
 
