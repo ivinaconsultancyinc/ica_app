@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime
-from database import Base
+from insurance_app.database import Base
 from datetime import datetime
 
 class LedgerEntry(Base):
@@ -11,3 +11,4 @@ class LedgerEntry(Base):
     amount = Column(Float, nullable=False)
     entry_type = Column(String(10), nullable=False)  # e.g., 'debit' or 'credit'
     timestamp = Column(DateTime, default=datetime.utcnow)
+
