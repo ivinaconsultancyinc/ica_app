@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime
-from database import Base
+from insurance_app.database import Base
 from datetime import datetime
 
 class ReinsuranceContract(Base):
@@ -14,3 +14,4 @@ class ReinsuranceContract(Base):
     effective_date = Column(DateTime, nullable=False)
     expiration_date = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+
