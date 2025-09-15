@@ -1,0 +1,26 @@
+html_content = '''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Insurance Company of Africa Management System</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <h1>Welcome to the Insurance Company of Africa Management System</h1>
+    <p>This is the main entry point for your application.</p>
+    <nav>
+        <ul>
+            <li><a href="/agents.html">Agents</a></li>
+        </ul>
+    </nav>
+</body>
+</html>
+'''
+
+# Save the HTML content to a file
+with open("index.html", "w") as f:
+    f.write(html_content)
+
+print("index.html file has been created successfully.")
