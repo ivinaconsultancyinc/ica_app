@@ -2,6 +2,7 @@ import os
 print("Current working directory:", os.getcwd())
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 # Absolute imports based on your structure
 from insurance_app.routers.routers_client import router as client_router
@@ -24,6 +25,7 @@ except ImportError:
     views_router = None
 
 app = FastAPI(title="Insurance Company of Africa Management System")
+app.mount("/static", StaticFiles(directory="Insurance_app/static"), name="static")
 
 # Include routers for each module
 app.include_router(client_router, prefix="/clients", tags=["Clients"])
@@ -46,3 +48,6 @@ if views_router:
 @app.get("/")
 def root():
     return {"message": "Welcome to the Insurance Company of Africa API"}
+
+
+
