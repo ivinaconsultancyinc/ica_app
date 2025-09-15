@@ -21,5 +21,6 @@ def update_html_files_with_favicon(directory):
             else:
                 print(f"No  tag found in: {filename}")
 # Run the update function
-Update_html_files_with_favicon(templates) 
+update_html_files_with_favicon(templates) 
+
 
