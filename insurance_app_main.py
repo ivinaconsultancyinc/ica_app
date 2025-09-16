@@ -20,16 +20,19 @@ try:
     from insurance_app.views import router as views_router
 except ImportError:
     views_router = None
+
 app = FastAPI(title="Insurance Company of Africa Management System")
+
 # --- Enhancement: Robust static directory resolution for deployment ---
 # This ensures the static directory is correctly resolved regardless of the working directory.
-static_dir = os.path.join(os.path.dirname(__file__), "Insurance_app", "static")
+static_dir = os.path.join(os.path.dirname(__file__), "insurance_app", "static")
 if os.path.isdir(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
+    print(f"Mounted static directory: {static_dir}")
 else:
-    # Fallback to original relative path if robust path does not exist
-    app.mount("/static", StaticFiles(directory="Insurance_app/static"), name="static")
+    print(f"Warning: Static directory '{static_dir}' does not exist. Static files will not be served.")
 # --- End enhancement ---
+
 # Include routers for each module
 app.include_router(client_router, prefix="/clients", tags=["Clients"])
 app.include_router(policy_router, prefix="/policies", tags=["Policies"])
@@ -46,8 +49,10 @@ app.include_router(reinsurance_router, prefix="/reinsurance", tags=["Reinsurance
 # Include views router if available
 if views_router:
     app.include_router(views_router)
+
 @app.get("/")
 def root():
     return {"message": "Welcome to the Insurance Company of Africa API"}
+
 
 
