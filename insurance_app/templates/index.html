@@ -1,372 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insurance Company of Africa - Management System</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-            padding: 40px 0;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-        }
-
-        .card h3 {
-            color: #4a5568;
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .card-icon {
-            width: 30px;
-            height: 30px;
-            margin-right: 10px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        .api-section {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .api-endpoints {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .endpoint {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-            transition: background-color 0.3s ease;
-        }
-
-        .endpoint:hover {
-            background: #e9ecef;
-        }
-
-        .endpoint-url {
-            font-family: 'Courier New', monospace;
-            color: #667eea;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .endpoint-desc {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .stat-item {
-            padding: 15px;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #667eea;
-            display: block;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .quick-actions {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 25px;
-            text-decoration: none;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .status-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            background: #28a745;
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        footer {
-            text-align: center;
-            color: white;
-            opacity: 0.8;
-            margin-top: 40px;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats {
-                flex-direction: column;
-                gap: 10px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Insurance Company of Africa - Management System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/static/favicon.ico">
+  <!-- Google Fonts for a modern look -->
+  https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap
+  <style>
+    :root {
+      --primary: #1a237e;
+      --accent: #1976d2;
+      --background: #f5f7fa;
+      --card-bg: #fff;
+      --text: #222;
+      --muted: #666;
+      --border-radius: 14px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    body {
+      background: var(--background);
+      color: var(--text);
+      font-family: 'Roboto', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: var(--primary);
+      color: #fff;
+      padding: 2rem 1rem 1rem 1rem;
+      text-align: center;
+      border-bottom-left-radius: var(--border-radius);
+      border-bottom-right-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+    header img {
+      height: 60px;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      background: #fff;
+      padding: 4px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      letter-spacing: 1px;
+    }
+    header p {
+      margin: 0.5rem 0 0 0;
+      font-size: 1.1rem;
+      color: #cfd8dc;
+    }
+    nav {
+      background: var(--accent);
+      padding: 0.5rem 1rem;
+      text-align: center;
+      border-radius: var(--border-radius);
+      margin: 1.5rem auto 2rem auto;
+      max-width: 900px;
+      box-shadow: var(--shadow);
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-weight: 500;
+      font-size: 1rem;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: #ffeb3b;
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .modules {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      flex: 1 1 260px;
+      min-width: 260px;
+      max-width: 320px;
+      padding: 1.5rem 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+      transform: translateY(-4px) scale(1.02);
+    }
+    .card h3 {
+      margin-top: 0;
+      color: var(--accent);
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .card p {
+      color: var(--muted);
+      font-size: 0.97rem;
+      margin-bottom: 1rem;
+    }
+    .card a {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.97rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .card a:hover {
+      background: #1565c0;
+      transform: translateY(-2px) scale(1.05);
+    }
+    .api-section {
+      background: #e3f2fd;
+      border-radius: var(--border-radius);
+      padding: 1.2rem 1rem;
+      margin: 2rem 0;
+      box-shadow: var(--shadow);
+    }
+    .api-section h4 {
+      margin-top: 0;
+      color: var(--primary);
+    }
+    .api-section ul {
+      padding-left: 1.2rem;
+      margin: 0.5rem 0 0 0;
+    }
+    .api-section li {
+      margin-bottom: 0.3rem;
+      font-size: 0.97rem;
+    }
+    .api-section a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .api-section a:hover {
+      text-decoration: underline;
+      color: #1565c0;
+    }
+    hr {
+      border: none;
+      border-top: 2px solid var(--accent);
+      margin: 2rem 0;
+    }
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin: 2rem 0 1rem 0;
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 700px) {
+      .modules {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .card {
+        max-width: 100%;
+      }
+      .container {
+        padding: 0 0.5rem;
+      }
+      nav {
+        font-size: 0.95rem;
+        padding: 0.5rem 0.2rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🏢 Insurance Company of Africa</h1>
-            <p class="subtitle">Comprehensive Management System</p>
-            <p><span class="status-indicator"></span>System Online</p>
-        </header>
-
-        <div class="dashboard">
-            <div class="card">
-                <h3><span class="card-icon">👥</span>Client Management</h3>
-                <p>Manage client information, policies, and relationships. Track customer interactions and maintain comprehensive records.</p>
-                <div class="quick-actions">
-                    <a href="/clients" class="btn">View Clients</a>
-                    <a href="/customers" class="btn">Customers</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3><span class="card-icon">📋</span>Policy Administration</h3>
-                <p>Create, modify, and track insurance policies. Manage policy lifecycle from inception to claims.</p>
-                <div class="quick-actions">
-                    <a href="/policies" class="btn">Manage Policies</a>
-                    <a href="/products" class="btn">Products</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3><span class="card-icon">💰</span>Financial Operations</h3>
-                <p>Handle premiums, commissions, and financial transactions. Monitor cash flow and generate reports.</p>
-                <div class="quick-actions">
-                    <a href="/premiums" class="btn">Premiums</a>
-                    <a href="/ledger" class="btn">Ledger</a>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3><span class="card-icon">🎯</span>Claims & Risk</h3>
-                <p>Process insurance claims and manage reinsurance operations. Track claim status and settlements.</p>
-                <div class="quick-actions">
-                    <a href="/claims" class="btn">Claims</a>
-                    <a href="/reinsurance" class="btn">Reinsurance</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="api-section">
-            <h2>🔗 API Endpoints</h2>
-            <p>Access the Insurance Management System through our RESTful API endpoints:</p>
-            
-            <div class="api-endpoints">
-                <div class="endpoint">
-                    <div class="endpoint-url">/clients</div>
-                    <div class="endpoint-desc">Client management operations</div>
-                </div>
-                <div class="endpoint">
-                    <div class="endpoint-url">/policies</div>
-                    <div class="endpoint-desc">Policy administration</div>
-                </div>
-                <div class="endpoint">
-                    <div class="endpoint-url">/products</div>
-                    <div class="endpoint-desc">Insurance products catalog</div>
-                </div>
-                <div class="endpoint">
-                    <div class="endpoint-url">/premiums</div>
-                    <div class="endpoint-desc">Premium calculations & payments</div>
-                </div>
-                <div class="endpoint">
-                    <div class="endpoint-url">/commissions</div>
-                    <div class="endpoint-desc">Agent commission tracking</div>
-                </div>
-                <div class="endpoint">
-                    <div class="endpoint-url">/claims</div>
-                    <div class="endpoint-desc">Claims processing & loans</div>
-                </div>
-                <div class="endpoint">
-                    <div class="endpoint-url">/customers</div>
-                    <div class="endpoint-desc">Customer relationship management</div>
-                </div>
-                <div class="endpoint">
-                    <div class="endpoint-url">/agents</div>
-                    <div class="endpoint-desc">Agent management system</div>
-                </div>
-                <div class="endpoint">
-                    <div class="endpoint-url">/documents</div>
-                    <div class="endpoint-desc">Document management</div>
-                </div>
-                <div class="endpoint">
-                    <div class="endpoint-url">/audit</div>
-                    <div class="endpoint-desc">Audit trail & compliance</div>
-                </div>
-                <div class="endpoint">
-                    <div class="endpoint-url">/ledger</div>
-                    <div class="endpoint-desc">Financial ledger operations</div>
-                </div>
-                <div class="endpoint">
-                    <div class="endpoint-url">/reinsurance</div>
-                    <div class="endpoint-desc">Reinsurance management</div>
-                </div>
-            </div>
-
-            <div class="stats">
-                <div class="stat-item">
-                    <span class="stat-number">12</span>
-                    <span class="stat-label">API Modules</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">50+</span>
-                    <span class="stat-label">Endpoints</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">24/7</span>
-                    <span class="stat-label">Availability</span>
-                </div>
-            </div>
-
-            <div class="quick-actions">
-                <a href="/docs" class="btn">📚 API Documentation</a>
-                <a href="/redoc" class="btn">📖 ReDoc</a>
-            </div>
-        </div>
-
-        <footer>
-            <p>&copy; 2024 Insurance Company of Africa. All rights reserved.</p>
-            <p>Powered by FastAPI & Modern Web Technologies</p>
-        </footer>
+  <header>
+    <img src="/static/logo.png" alt="Company Logo">
+    <h1>🏢 Insurance Company of Africa</h1>
+    <p>Comprehensive Management System &mdash; System Online</p>
+  </header>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/clients">Clients</a>
+    <a href="/policies">Policies</a>
+    <a href="/claims">Claims</a>
+    <a href="/docs">API Docs</a>
+  </nav>
+  <div class="container">
+    <div class="modules">
+      <div class="card">
+        <h3>👥 Client Management</h3>
+        <p>Manage client information, policies, and relationships. Track customer interactions and maintain comprehensive records.</p>
+        <a href="/clients">View Clients</a>
+        <a href="/customers">Customers</a>
+      </div>
+      <div class="card">
+        <h3>📋 Policy Administration</h3>
+        <p>Create, modify, and track insurance policies. Manage policy lifecycle from inception to claims.</p>
+        <a href="/policies">Manage Policies</a>
+        <a href="/products">Products</a>
+      </div>
+      <div class="card">
+        <h3>💰 Financial Operations</h3>
+        <p>Handle premiums, commissions, and financial transactions. Monitor cash flow and generate reports.</p>
+        <a href="/premiums">Premiums</a>
+        <a href="/ledger">Ledger</a>
+      </div>
+      <div class="card">
+        <h3>🎯 Claims & Risk</h3>
+        <p>Process insurance claims and manage reinsurance operations. Track claim status and settlements.</p>
+        <a href="/claims">Claims</a>
+        <a href="/reinsurance">Reinsurance</a>
+      </div>
     </div>
-
-    <script>
-        // Simple script to enhance user experience
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add loading effect for buttons
-            const buttons = document.querySelectorAll('.btn');
-            buttons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    // Add a subtle loading effect
-                    this.style.opacity = '0.8';
-                    setTimeout(() => {
-                        this.style.opacity = '1';
-                    }, 200);
-                });
-            });
-
-            // Update system status
-            const statusIndicator = document.querySelector('.status-indicator');
-            setInterval(() => {
-                fetch('/')
-                    .then(response => {
-                        if (response.ok) {
-                            statusIndicator.style.background = '#28a745';
-                        }
-                    })
-                    .catch(() => {
-                        statusIndicator.style.background = '#dc3545';
-                    });
-            }, 30000); // Check every 30 seconds
-        });
-    </script>
+    <hr>
+    <div class="api-section">
+      <h4>🔗 API Endpoints</h4>
+      <ul>
+        <li><a href="/clients">/clients</a> – Client management operations</li>
+        <li><a href="/policies">/policies</a> – Policy administration</li>
+        <li><a href="/products">/products</a> – Insurance products catalog</li>
+        <li><a href="/premiums">/premiums</a> – Premium calculations & payments</li>
+        <li><a href="/commissions">/commissions</a> – Agent commission tracking</li>
+        <li><a href="/claims">/claims</a> – Claims processing & loans</li>
+        <li><a href="/customers">/customers</a> – Customer relationship management</li>
+        <li><a href="/agents">/agents</a> – Agent management system</li>
+        <li><a href="/documents">/documents</a> – Document management</li>
+        <li><a href="/audit">/audit</a> – Audit trail & compliance</li>
+        <li><a href="/ledger">/ledger</a> – Financial ledger operations</li>
+        <li><a href="/reinsurance">/reinsurance</a> – Reinsurance management</li>
+      </ul>
+      <p>12 API Modules | 50+ Endpoints | 24/7 Availability
+        <a href="/docs">📚 API Documentation</a> |
+        <a href="/redoc">📖 ReDoc</a>
+      </p>
+    </div>
+  </div>
+  <footer>
+    © 2024 Insurance Company of Africa. All rights reserved.<br>
+    <a href="mailto:support@insurancecompany.com">Contact Support</a>
+  </footer>
 </body>
 </html>
