@@ -1,8 +1,9 @@
 import os
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from sqlalchemy.orm import Session
 
 # Absolute imports based on your structure
 from insurance_app.routers.routers_client import router as client_router
@@ -23,6 +24,10 @@ try:
     from insurance_app.views import router as views_router
 except ImportError:
     views_router = None
+
+# --- Database integration ---
+from connection import get_db  # Use your connection.py for DB session
+# Import your ORM models as needed, e.g. from models import Client
 
 app = FastAPI(title="Insurance Company of Africa Management System")
 
@@ -51,74 +56,87 @@ app.include_router(document_router, prefix="/documents", tags=["Documents"])
 app.include_router(audit_router, prefix="/audit", tags=["Audit"])
 app.include_router(ledger_router, prefix="/ledger", tags=["Ledger"])
 app.include_router(reinsurance_router, prefix="/reinsurance", tags=["Reinsurance"])
-
 # Include views router if available
 if views_router:
     app.include_router(views_router)
 
 # --- Update: Serve dynamic index.html from templates ---
 @app.get("/", response_class=HTMLResponse)
-async def read_root(request: Request):
-    # Pass any variables you want to use in index.html
+async def read_root(request: Request, db: Session = Depends(get_db)):
+    # Example: Pass ORM data to index.html if needed
+    # e.g., clients = db.query(Client).limit(5).all()
+    # return templates.TemplateResponse("index.html", {"request": request, "clients": clients})
     return templates.TemplateResponse("index.html", {"request": request})
 
-# Example: Serve other HTML pages dynamically
 @app.get("/agents", response_class=HTMLResponse)
-async def agents_page(request: Request):
+async def agents_page(request: Request, db: Session = Depends(get_db)):
+    # Example: Query agents from DB if needed
+    # agents = db.query(Agent).all()
     return templates.TemplateResponse("agents.html", {"request": request})
 
 @app.get("/claims", response_class=HTMLResponse)
-async def claims_page(request: Request):
+async def claims_page(request: Request, db: Session = Depends(get_db)):
+    # Example: Query claims from DB if needed
+    # claims = db.query(Claim).all()
     return templates.TemplateResponse("claims.html", {"request": request})
 
-# Add similar routes for other HTML files in your templates directory
-
 @app.get("/audit", response_class=HTMLResponse)
-async def audit_page(request: Request):
+async def audit_page(request: Request, db: Session = Depends(get_db)):
+    # Example: Query audit records from DB if needed
+    # audits = db.query(Audit).all()
     return templates.TemplateResponse("audit.html", {"request": request})
 
 @app.get("/commission", response_class=HTMLResponse)
-async def commission_page(request: Request):
+async def commission_page(request: Request, db: Session = Depends(get_db)):
+    # Example: Query commissions from DB if needed
+    # commissions = db.query(Commission).all()
     return templates.TemplateResponse("commission.html", {"request": request})
 
 @app.get("/clients", response_class=HTMLResponse)
-async def clients_page(request: Request):
+async def clients_page(request: Request, db: Session = Depends(get_db)):
+    # Example: Query clients from DB if needed
+    # clients = db.query(Client).all()
     return templates.TemplateResponse("clients.html", {"request": request})
 
 @app.get("/customers", response_class=HTMLResponse)
-async def customers_page(request: Request):
+async def customers_page(request: Request, db: Session = Depends(get_db)):
+    # Example: Query customers from DB if needed
+    # customers = db.query(Customer).all()
     return templates.TemplateResponse("customers.html", {"request": request})
 
 @app.get("/documents", response_class=HTMLResponse)
-async def documents_page(request: Request):
+async def documents_page(request: Request, db: Session = Depends(get_db)):
+    # Example: Query documents from DB if needed
+    # documents = db.query(Document).all()
     return templates.TemplateResponse("documents.html", {"request": request})
 
 @app.get("/ledger", response_class=HTMLResponse)
-async def ledger_page(request: Request):
+async def ledger_page(request: Request, db: Session = Depends(get_db)):
+    # Example: Query ledger entries from DB if needed
+    # ledgers = db.query(Ledger).all()
     return templates.TemplateResponse("ledger.html", {"request": request})
 
 @app.get("/policies", response_class=HTMLResponse)
-async def policies_page(request: Request):
+async def policies_page(request: Request, db: Session = Depends(get_db)):
+    # Example: Query policies from DB if needed
+    # policies = db.query(Policy).all()
     return templates.TemplateResponse("policies.html", {"request": request})
 
 @app.get("/premiums", response_class=HTMLResponse)
-async def premiums_page(request: Request):
+async def premiums_page(request: Request, db: Session = Depends(get_db)):
+    # Example: Query premiums from DB if needed
+    # premiums = db.query(Premium).all()
     return templates.TemplateResponse("premiums.html", {"request": request})
 
 @app.get("/products", response_class=HTMLResponse)
-async def products_page(request: Request):
+async def products_page(request: Request, db: Session = Depends(get_db)):
+    # Example: Query products from DB if needed
+    # products = db.query(Product).all()
     return templates.TemplateResponse("products.html", {"request": request})
 
 @app.get("/reinsurance", response_class=HTMLResponse)
-async def reinsurance_page(request: Request):
+async def reinsurance_page(request: Request, db: Session = Depends(get_db)):
+    # Example: Query reinsurance records from DB if needed
+    # reinsurances = db.query(Reinsurance).all()
     return templates.TemplateResponse("reinsurance.html", {"request": request})
-
-
-
-
-
-
-
-
-
 
