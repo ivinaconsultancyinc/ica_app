@@ -1,30 +1,102 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Documents Form</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.cssdy>
-<div class="container mt-5">
-    <h2>Documents Form</h2>
-    <form>
-        <div class="mb-3">
-            <label for="document_id" class="form-label">Document ID</label>
-            <input type="text" class="form-control" id="document_id" name="document_id">
-        </div>
-        <div class="mb-3">
-            <label for="client_id" class="form-label">Client ID</label>
-            <input type="text" class="form>
-        <div class="mb-3">
-            <label for="document_type" class="form-label">Document Type</label>
-            <input type="text" class="form-control" id="document_type" name="document_type">
-        </div>
-        <div class="mb-3">
-            <label for="upload_date" class="form-label">Upload Date</label>
-            <input type="date" class="form-control" id="upload_date" name="upload_date">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+</head>
+<body>
+    <h3>Documents Form</h3>
+
+    <!-- Add Document Form -->
+    <form id="add-document-form">
+        <input type="text" name="title" placeholder="Document Title" required>
+        <input type="text" name="file_path" placeholder="File Path">
+        <input type="datetime-local" name="uploaded_date" placeholder="Upload Date">
+        <button type="submit">Add Document</button>
     </form>
-</div>
+
+    <h4>Document List</h4>
+    <ul id="document-list"></ul>
+
+    <!-- ========================= -->
+    <!-- Add your POST, PUT, DELETE fetch code -->
+    <!-- ========================= -->
+    <script>
+    function loadDocuments() {
+        fetch('/api/documents/')
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('document-list');
+                list.innerHTML = '';
+                data.forEach(document => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <strong>${document.title}</strong> - ${document.file_path || ''} (${document.uploaded_date || 'N/A'})
+                        <button onclick="editDocument(${document.id}, '${document.title}', '${document.file_path || ''}', '${document.uploaded_date || ''}')">Edit</button>
+                        <button onclick="deleteDocument(${document.id})">Delete</button>
+                    `;
+                    list.appendChild(li);
+                });
+            });
+    }
+
+    // POST: Add a new document
+    document.getElementById('add-document-form').onsubmit = function(e) {
+        e.preventDefault();
+        const form = e.target;
+        fetch('/api/documents/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                title: form.title.value,
+                file_path: form.file_path.value,
+                uploaded_date: form.uploaded_date.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Document added: ' + data.title);
+            form.reset();
+            loadDocuments();
+        });
+    };
+
+    // PUT: Edit an existing document
+    function editDocument(id, currentTitle, currentFilePath, currentUploadedDate) {
+        const title = prompt("Edit title:", currentTitle);
+        if (title === null) return;
+        const file_path = prompt("Edit file path:", currentFilePath);
+        const uploaded_date = prompt("Edit uploaded date (YYYY-MM-DDTHH:MM):", currentUploadedDate);
+        fetch(`/api/documents/${id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({title, file_path, uploaded_date})
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Document updated: ' + data.title);
+            loadDocuments();
+        });
+    }
+
+    // DELETE: Remove a document
+    function deleteDocument(id) {
+        if (!confirm("Are you sure you want to delete this document?")) return;
+        fetch(`/api/documents/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.detail);
+            loadDocuments();
+        });
+    }
+
+    // Initial load
+    loadDocuments();
+    </script>
+    <!-- ========================= -->
+    <!-- End of POST, PUT, DELETE fetch code -->
+    <!-- ========================= -->
+
 </body>
 </html>
