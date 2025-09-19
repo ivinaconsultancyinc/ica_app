@@ -1,33 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Premiums Form</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css
 </head>
 <body>
-<div class="container mt-5">
-    <h2>Premiums Form</h2>
-    <form method="post" action="/submit/premiums">
-        <div class="mb-3">
-            <label for="premium_id" class="form-label">Premium ID</label>
-            <input type="text" class="form-control" id="premium_id" name="premium_id">
-        </div>
-        <div class="mb-3">
-            <label for="policy_number" class="form-label">Policy Number</label>
-            <input type="text" class="form-control" id="policy_number" name="policy_number">
-        </div>
-        <div class="mb-3">
-            <label for="amount" class="form-label">Amount</label>
-            <input type="number" class="form-control" id="amount" name="amount">
-        </div>
-        <div class="mb-3">
-            <label for="due_date" class="form-label">Due Date</label>
-            <input type="date" class="form-control" id="due_date" name="due_date">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+    <h3>Premiums Form</h3>
+
+    <!-- Add Premium Form -->
+    <form id="add-premium-form">
+        <input type="number" name="policy_id" placeholder="Policy ID" required>
+        <input type="number" name="amount" placeholder="Amount" required>
+        <input type="date" name="due_date" placeholder="Due Date">
+        <input type="date" name="paid_date" placeholder="Paid Date">
+        <button type="submit">Add Premium</button>
     </form>
-</div>
+
+    <h4>Premium List</h4>
+    <ul id="premium-list"></ul>
+
+    <!-- ========================= -->
+    <!-- Add your POST, PUT, DELETE fetch code -->
+    <!-- ========================= -->
+    <script>
+    function loadPremiums() {
+        fetch('/api/premiums/')
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('premium-list');
+                list.innerHTML = '';
+                data.forEach(premium => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <strong>Policy ${premium.policy_id}</strong> - $${premium.amount} (Due: ${premium.due_date || 'N/A'}, Paid: ${premium.paid_date || 'N/A'})
+                        <button onclick="editPremium(${premium.id}, '${premium.policy_id}', '${premium.amount}', '${premium.due_date || ''}', '${premium.paid_date || ''}')">Edit</button>
+                        <button onclick="deletePremium(${premium.id})">Delete</button>
+                    `;
+                    list.appendChild(li);
+                });
+            });
+    }
+
+    // POST: Add a new premium
+    document.getElementById('add-premium-form').onsubmit = function(e) {
+        e.preventDefault();
+        const form = e.target;
+        fetch('/api/premiums/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                policy_id: form.policy_id.value,
+                amount: form.amount.value,
+                due_date: form.due_date.value,
+                paid_date: form.paid_date.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Premium added for policy: ' + data.policy_id);
+            form.reset();
+            loadPremiums();
+        });
+    };
+
+    // PUT: Edit an existing premium
+    function editPremium(id, currentPolicyId, currentAmount, currentDueDate, currentPaidDate) {
+        const policy_id = prompt("Edit policy ID:", currentPolicyId);
+        if (policy_id === null) return;
+        const amount = prompt("Edit amount:", currentAmount);
+        if (amount === null) return;
+        const due_date = prompt("Edit due date (YYYY-MM-DD):", currentDueDate);
+        const paid_date = prompt("Edit paid date (YYYY-MM-DD):", currentPaidDate);
+        fetch(`/api/premiums/${id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({policy_id, amount, due_date, paid_date})
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Premium updated for policy: ' + data.policy_id);
+            loadPremiums();
+        });
+    }
+
+    // DELETE: Remove a premium
+    function deletePremium(id) {
+        if (!confirm("Are you sure you want to delete this premium?")) return;
+        fetch(`/api/premiums/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.detail);
+            loadPremiums();
+        });
+    }
+
+    // Initial load
+    loadPremiums();
+    </script>
+    <!-- ========================= -->
+    <!-- End of POST, PUT, DELETE fetch code -->
+    <!-- ========================= -->
+
 </body>
 </html>
