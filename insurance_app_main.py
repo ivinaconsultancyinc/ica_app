@@ -140,3 +140,6 @@ async def reinsurance_page(request: Request, db: Session = Depends(get_db)):
     # reinsurances = db.query(Reinsurance).all()
     return templates.TemplateResponse("reinsurance.html", {"request": request})
 
+from insurance_app.models.models import Client, Policy, Product, Premium, Commission, Claim, Customer, Agent, Document, Audit, Ledger, Reinsurance
+
+
