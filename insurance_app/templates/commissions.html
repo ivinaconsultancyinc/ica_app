@@ -1,33 +1,104 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Commissions Form</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css
+    <link reldn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css
 </head>
 <body>
-<div="container mt-5">
-    <h2>Commissions Form</h2>
-    <form>
-        <div class="mb-3">
-            <label for="commission_id" class="form-label">Commission ID</label>
-            <input type="text" class="form-control" id="commission_id" name="commission_id">
-        </div>
-        <div class="mb-3">
-            <label for="agent_id" class="form-label">Agent ID</label>
-            <input type="text" class="form-control" id="agent_id" name="agent_id">
-        </div>
-        <div class="mb-3">
-            <label for="amount" class="form-label">Amount</label>
-            <input type="number" class="form-control" id="amount" name="amount">
-        </div>
-        <div class="mb-3">
-            <label for="date" class="form-label">Date</label>
-            <input type="date" class="form-control" id="date" name="date">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+    <h3>Commissions Form</h3>
+
+    <!-- Add Commission Form -->
+    <form id="add-commission-form">
+        <input type="number" name="agent_id" placeholder="Agent ID" required>
+        <input type="number" name="amount" placeholder="Amount" required>
+        <input type="date" name="date" placeholder="Date">
+        <button type="submit">Add Commission</button>
     </form>
-</div>
+
+    <h4>Commission List</h4>
+    <ul id="commission-list"></ul>
+
+    <!-- ========================= -->
+    <!-- Add your POST, PUT, DELETE fetch code -->
+    <!-- ========================= -->
+    <script>
+    function loadCommissions() {
+        fetch('/api/commissions/')
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('commission-list');
+                list.innerHTML = '';
+                data.forEach(commission => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <strong>Agent ${commission.agent_id}</strong> - $${commission.amount} (${commission.date || 'N/A'})
+                        <button onclick="editCommission(${commission.id}, '${commission.agent_id}', '${commission.amount}', '${commission.date || ''}')">Edit</button>
+                        <button onclick="deleteCommission(${commission.id})">Delete</button>
+                    `;
+                    list.appendChild(li);
+                });
+            });
+    }
+
+    // POST: Add a new commission
+    document.getElementById('add-commission-form').onsubmit = function(e) {
+        e.preventDefault();
+        const form = e.target;
+        fetch('/api/commissions/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                agent_id: form.agent_id.value,
+                amount: form.amount.value,
+                date: form.date.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Commission added for agent: ' + data.agent_id);
+            form.reset();
+            loadCommissions();
+        });
+    };
+
+    // PUT: Edit an existing commission
+    function editCommission(id, currentAgentId, currentAmount, currentDate) {
+        const agent_id = prompt("Edit agent ID:", currentAgentId);
+        if (agent_id === null) return;
+        const amount = prompt("Edit amount:", currentAmount);
+        if (amount === null) return;
+        const date = prompt("Edit date (YYYY-MM-DD):", currentDate);
+        fetch(`/api/commissions/${id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({agent_id, amount, date})
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Commission updated for agent: ' + data.agent_id);
+            loadCommissions();
+        });
+    }
+
+    // DELETE: Remove a commission
+    function deleteCommission(id) {
+        if (!confirm("Are you sure you want to delete this commission?")) return;
+        fetch(`/api/commissions/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.detail);
+            loadCommissions();
+        });
+    }
+
+    // Initial load
+    loadCommissions();
+    </script>
+    <!-- ========================= -->
+    <!-- End of POST, PUT, DELETE fetch code -->
+    <!-- ========================= -->
+
 </body>
 </html>
