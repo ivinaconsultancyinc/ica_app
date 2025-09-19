@@ -1,33 +1,100 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Products Form</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css
 </head>
 <body>
-<div class="container mt-5">
-    <h2>Products Form</h2>
-    <form>
-        <div class="mb-3">
-            <label for="product_id" class="form-label">Product ID</label>
-            <input type="text" class="form-control" id="product_id" name="product_id">
-        </div>
-        <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" name="name">
-        </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description"></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="coverage_amount" class="form-label">Coverage Amount</label>
-            <input type="number" class="form-control" id="coverage_amount" name="coverage_amount">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+    <h3>Products Form</h3>
+
+    <!-- Add Product Form -->
+    <form id="add-product-form">
+        <input type="text" name="name" placeholder="Product Name" required>
+        <input type="text" name="description" placeholder="Description">
+        <button type="submit">Add Product</button>
     </form>
-</div>
+
+    <h4>Product List</h4>
+    <ul id="product-list"></ul>
+
+    <!-- ========================= -->
+    <!-- Add your POST, PUT, DELETE fetch code -->
+    <!-- ========================= -->
+    <script>
+    function loadProducts() {
+        fetch('/api/products/')
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('product-list');
+                list.innerHTML = '';
+                data.forEach(product => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <strong>${product.name}</strong> - ${product.description || ''}
+                        <button onclick="editProduct(${product.id}, '${product.name}', '${product.description || ''}')">Edit</button>
+                        <button onclick="deleteProduct(${product.id})">Delete</button>
+                    `;
+                    list.appendChild(li);
+                });
+            });
+    }
+
+    // POST: Add a new product
+    document.getElementById('add-product-form').onsubmit = function(e) {
+        e.preventDefault();
+        const form = e.target;
+        fetch('/api/products/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name: form.name.value,
+                description: form.description.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Product added: ' + data.name);
+            form.reset();
+            loadProducts();
+        });
+    };
+
+    // PUT: Edit an existing product
+    function editProduct(id, currentName, currentDescription) {
+        const name = prompt("Edit name:", currentName);
+        if (name === null) return;
+        const description = prompt("Edit description:", currentDescription);
+        fetch(`/api/products/${id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({name, description})
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Product updated: ' + data.name);
+            loadProducts();
+        });
+    }
+
+    // DELETE: Remove a product
+    function deleteProduct(id) {
+        if (!confirm("Are you sure you want to delete this product?")) return;
+        fetch(`/api/products/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.detail);
+            loadProducts();
+        });
+    }
+
+    // Initial load
+    loadProducts();
+    </script>
+    <!-- ========================= -->
+    <!-- End of POST, PUT, DELETE fetch code -->
+    <!-- ========================= -->
+
 </body>
 </html>
