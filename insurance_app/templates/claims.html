@@ -1,37 +1,113 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Claims Form</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css
+    https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css
 </head>
 <body>
-<div class="container mt-5">
-    <h2>Claims Form</h2>
-    <form>
-        <div class="mb-3">
-            <label for="claim_id" class="form-label">Claim ID</label>
-            <input type="text" class="form-control" id="claim_id" name="claim_id">
-        </div>
-        <div class="mb-3">
-            <label for="policy_number" class="form-label">Policy Number</label>
-            <input type="text" class="form-control" id="policy_number" name="policy_number">
-        </div>
-        <div class="mb-3">
-            <label for="claim_amount" class="form-label">Claim Amount</label>
-            <input type="number" class="form-control" id="claim_amount" name="claim_amount">
-        </div>
-        <div class="mb-3">
-            <label for="claim_date" class="form-label">Claim Date</label>
-            <input type="date" class="form-control" id="claim_date" name="claim_date">
-        </div>
-        <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <input type="text" class="form-control" id="status" name="status">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+    <h3>Claims Form</h3>
+
+    <!-- Add Claim Form -->
+    <form id="add-claim-form">
+        <input type="number" name="policy_id" placeholder="Policy ID" required>
+        <input type="text" name="claim_number" placeholder="Claim Number" required>
+        <input type="number" name="amount" placeholder="Claim Amount">
+        <input type="text" name="status" placeholder="Status">
+        <input type="date" name="filed_date" placeholder="Filed Date">
+        <input type="date" name="settled_date" placeholder="Settled Date">
+        <button type="submit">Add Claim</button>
     </form>
-</div>
+
+    <h4>Claim List</h4>
+    <ul id="claim-list"></ul>
+
+    <!-- ========================= -->
+    <!-- Add your POST, PUT, DELETE fetch code -->
+    <!-- ========================= -->
+    <script>
+    function loadClaims() {
+        fetch('/api/claims/')
+            .then(response => response.json())
+            .then(data => {
+                const list = document.getElementById('claim-list');
+                list.innerHTML = '';
+                data.forEach(claim => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <strong>${claim.claim_number}</strong> - $${claim.amount || 'N/A'} (${claim.status || 'N/A'})
+                        <button onclick="editClaim(${claim.id}, '${claim.policy_id}', '${claim.claim_number}', '${claim.amount || ''}', '${claim.status || ''}', '${claim.filed_date || ''}', '${claim.settled_date || ''}')">Edit</button>
+                        <button onclick="deleteClaim(${claim.id})">Delete</button>
+                    `;
+                    list.appendChild(li);
+                });
+            });
+    }
+
+    // POST: Add a new claim
+    document.getElementById('add-claim-form').onsubmit = function(e) {
+        e.preventDefault();
+        const form = e.target;
+        fetch('/api/claims/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                policy_id: form.policy_id.value,
+                claim_number: form.claim_number.value,
+                amount: form.amount.value,
+                status: form.status.value,
+                filed_date: form.filed_date.value,
+                settled_date: form.settled_date.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Claim added: ' + data.claim_number);
+            form.reset();
+            loadClaims();
+        });
+    };
+
+    // PUT: Edit an existing claim
+    function editClaim(id, currentPolicyId, currentClaimNumber, currentAmount, currentStatus, currentFiledDate, currentSettledDate) {
+        const policy_id = prompt("Edit policy ID:", currentPolicyId);
+        if (policy_id === null) return;
+        const claim_number = prompt("Edit claim number:", currentClaimNumber);
+        if (claim_number === null) return;
+        const amount = prompt("Edit amount:", currentAmount);
+        const status = prompt("Edit status:", currentStatus);
+        const filed_date = prompt("Edit filed date (YYYY-MM-DD):", currentFiledDate);
+        const settled_date = prompt("Edit settled date (YYYY-MM-DD):", currentSettledDate);
+        fetch(`/api/claims/${id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({policy_id, claim_number, amount, status, filed_date, settled_date})
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Claim updated: ' + data.claim_number);
+            loadClaims();
+        });
+    }
+
+    // DELETE: Remove a claim
+    function deleteClaim(id) {
+        if (!confirm("Are you sure you want to delete this claim?")) return;
+        fetch(`/api/claims/${id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.detail);
+            loadClaims();
+        });
+    }
+
+    // Initial load
+    loadClaims();
+    </script>
+    <!-- ========================= -->
+    <!-- End of POST, PUT, DELETE fetch code -->
+    <!-- ========================= -->
+
 </body>
 </html>
