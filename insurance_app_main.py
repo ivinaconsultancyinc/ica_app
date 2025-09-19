@@ -20,6 +20,8 @@ from insurance_app.routers.routers_ledger import router as ledger_router
 from insurance_app.routers.routers_reinsurance import router as reinsurance_router
 from insurance_app.models.models import Client, Policy, Product, Premium, Commission, Claim, Customer, Agent, Document, Audit, Ledger, Reinsurance
 
+app = FastAPI(title="Insurance Company of Africa Management System")
+
 @app.post("/api/clients/")
 def create_client(name: str, email: str, phone: str = None, db: Session = Depends(get_db)):
     client = Client(name=name, email=email, phone=phone)
@@ -510,8 +512,6 @@ except ImportError:
 from connection import get_db  # Use your connection.py for DB session
 # Import your ORM models as needed, e.g. from models import Client
 
-app = FastAPI(title="Insurance Company of Africa Management System")
-
 # --- Enhancement: Robust static directory resolution for deployment ---
 static_dir = os.path.join(os.path.dirname(__file__), "insurance_app", "static")
 if os.path.isdir(static_dir):
@@ -620,6 +620,7 @@ async def reinsurance_page(request: Request, db: Session = Depends(get_db)):
     # Example: Query reinsurance records from DB if needed
     # reinsurances = db.query(Reinsurance).all()
     return templates.TemplateResponse("reinsurance.html", {"request": request})
+
 
 
 
