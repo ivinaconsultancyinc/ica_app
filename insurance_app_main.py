@@ -509,7 +509,7 @@ except ImportError:
     views_router = None
 
 # --- Database integration ---
-from connection import get_db  # Use your connection.py for DB session
+from insurance_app.connection import get_db  # Use your connection.py for DB session
 # Import your ORM models as needed, e.g. from models import Client
 
 # --- Enhancement: Robust static directory resolution for deployment ---
@@ -620,6 +620,7 @@ async def reinsurance_page(request: Request, db: Session = Depends(get_db)):
     # Example: Query reinsurance records from DB if needed
     # reinsurances = db.query(Reinsurance).all()
     return templates.TemplateResponse("reinsurance.html", {"request": request})
+
 
 
 
