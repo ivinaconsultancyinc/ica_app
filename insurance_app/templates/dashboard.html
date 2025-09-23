@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Insurance Company of Africa - Executive Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Chart.js for analytics -->
+    https://cdn.jsdelivr.net/npm/chart.js</script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; background: #f7f7f7; }
+        h1, h2, h3 { color: #1a237e; }
+        .tree, .reports, .compliance { background: #fff; padding: 1em; border-radius: 8px; margin-bottom: 2em; box-shadow: 0 2px 8px #eee; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1em; margin-bottom: 2em; }
+        .kpi { background: #e3f2fd; padding: 1em; border-radius: 8px; text-align: center; }
+        .trend { font-size: 0.9em; color: #388e3c; }
+        .negative { color: #d32f2f; }
+        .export-btns { margin: 1em 0; }
+        .currency-toggle { margin-bottom: 1em; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1em; background: #fff; }
+        th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: center; }
+        th { background: #e3f2fd; }
+        .compliance ul { list-style: none; padding: 0; }
+        .compliance li { margin-bottom: 0.5em; }
+        .check { color: #388e3c; font-weight: bold; }
+        .warn { color: #fbc02d; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Insurance Company of Africa - Executive Dashboard</h1>
+    <h2>Insurance Company of Africa</h2>
+    <div class="tree">
+        <strong>Dashboard Location:</strong> /insurance_app/templates/dashboard.html<br>
+        <strong>Last Updated:</strong> <!-- You can inject last updated date here -->
+        <pre>
+📁 insurance_app/
+ ├── 📁 routers/
+ ├── 📁 models/
+ ├── 📁 templates/
+ │   ├── 📄 index.html
+ │   ├── 📄 clients.html
+ │   ├── 📊 dashboard.html
+ │   └── 📄 ...
+ ├── 📁 static/
+ └── 📄 main.py
+        </pre>
+    </div>
+
+    <div class="currency-toggle">
+        <label for="currency">Reporting Currency:</label>
+        <select id="currency" onchange="changeCurrency()">
+            <option value="LRD" {% if currency == 'LRD' %}selected{% endif %}>Liberian Dollar (LRD)</option>
+            <option value="USD" {% if currency == 'USD' %}selected{% endif %}>US Dollar (USD)</option>
+        </select>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi">
+            <h3>Total Premium Revenue</h3>
+            <div id="premium-revenue">L$ 15,420,500</div>
+            <div class="trend">+12.5% from last month</div>
+        </div>
+        <div class="kpi">
+            <h3>Active Policies</h3>
+            <div>8,247</div>
+            <div class="trend">+5.2% from last month</div>
+        </div>
+        <div class="kpi">
+            <h3>Claims Processed</h3>
+            <div>1,432</div>
+            <div class="trend negative">-3.1% from last month</div>
+        </div>
+        <div class="kpi">
+            <h3>Loss Ratio</h3>
+            <div>68.5%</div>
+            <div class="trend negative">-2.3% from last month</div>
+        </div>
+        <div class="kpi">
+            <h3>Customer Satisfaction</h3>
+            <div>94.2%</div>
+            <div class="trend">+1.8% from last month</div>
+        </div>
+        <div class="kpi">
+            <h3>Commission Paid</h3>
+            <div>L$ 2,310,750</div>
+            <div class="trend">+8.4% from last month</div>
+        </div>
+    </div>
+
+    <div class="reports">
+        <h3>Claims by Month (Count &amp; Total Value)</h3>
+        <div class="export-btns">
+            <aashboard/export/excel?currency={{ currency }}Export to Excel</a>
+            /dashboard/export/pdf?currency={{ currency }}Export to PDF</a>
+        </div>
+        <div style="max-width: 700px; margin: auto;">
+            <canvas id="claimsChart"></canvas>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Claim Count</th>
+                    <th>Total Value ({{ currency }})</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in analytics %}
+                <tr>
+                    <td>{{ row.month }}</td>
+                    <td>{{ row.count }}</td>
+                    <td>{{ "%.2f"|format(row.total_value) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="reports">
+        <h3>Premium Revenue Trend (Last 12 Months)</h3>
+        <!-- Placeholder for premium revenue chart -->
+        <canvas id="premiumChart"></canvas>
+    </div>
+
+    <div class="reports">
+        <h3>Policy Distribution by Product</h3>
+        <!-- Placeholder for policy distribution chart -->
+        <canvas id="policyChart"></canvas>
+    </div>
+
+    <div class="reports">
+        <h3>Claims by Status</h3>
+        <!-- Placeholder for claims status chart -->
+        <canvas id="statusChart"></canvas>
+    </div>
+
+    <div class="reports">
+        <h3>Agent Performance</h3>
+        <!-- Placeholder for agent performance chart -->
+        <canvas id="agentChart"></canvas>
+    </div>
+
+    <div class="reports">
+        <h3>Comprehensive Financial Reports</h3>
+        <table>
+            <tr><th>Gross Written Premium (GWP)</th><td>L$ 18,750,320</td></tr>
+            <tr><th>Net Premium Income</th><td>L$ 15,420,500</td></tr>
+            <tr><th>Claims Incurred</th><td>L$ 10,562,840</td></tr>
+            <tr><th>Underwriting Profit</th><td>L$ 4,857,660</td></tr>
+            <tr><th>Solvency Ratio</th><td>187.3%</td></tr>
+            <tr><th>Combined Ratio</th><td>83.5%</td></tr>
+            <tr><th>Return on Equity (ROE)</th><td>15.8%</td></tr>
+            <tr><th>Technical Reserves</th><td>L$ 42,150,890</td></tr>
+        </table>
+    </div>
+
+    <div class="compliance">
+        <h3>Regulatory Compliance &amp; Best Practices</h3>
+        <ul>
+            <li><span class="check">&#10003;</span> IFRS 17 Compliance: <strong>Fully Compliant</strong></li>
+            <li><span class="check">&#10003;</span> Solvency II Standards: <strong>Above Required Capital</strong></li>
+            <li><span class="warn">&#33;</span> Risk Management: <strong>Review Pending</strong></li>
+            <li><span class="check">&#10003;</span> AML/KYC Procedures: <strong>100% Compliance</strong></li>
+            <li><span class="check">&#10003;</span> Data Protection: <strong>GDPR Compliant</strong></li>
+            <li><span class="check">&#10003;</span> Actuarial Reports: <strong>Up to Date</strong></li>
+        </ul>
+    </div>
+
+    <script>
+        // Currency toggle
+        function changeCurrency() {
+            const currency = document.getElementById('currency').value;
+            window.location.href = '/dashboard?currency=' + currency;
+        }
+
+        // Claims by Month Chart
+        const analytics = {{ analytics | tojson }};
+        const ctx = document.getElementById('claimsChart').getContext('2d');
+        const months = analytics.map(a => a.month);
+        const counts = analytics.map(a => a.count);
+        const totals = analytics.map(a => a.total_value);
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [
+                    { label: 'Claim Count', data: counts, backgroundColor: 'rgba(54, 162, 235, 0.5)' },
+                    { label: 'Total Value', data: totals, backgroundColor: 'rgba(255, 99, 132, 0.5)' }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // Placeholder charts for other analytics (can be filled with real data)
+        new Chart(document.getElementById('premiumChart').getContext('2d'), {
+            type: 'line',
+            data: { labels: [], datasets: [] },
+            options: { responsive: true }
+        });
+        new Chart(document.getElementById('policyChart').getContext('2d'), {
+            type: 'pie',
+            data: { labels: [], datasets: [] },
+            options: { responsive: true }
+        });
+        new Chart(document.getElementById('statusChart').getContext('2d'), {
+            type: 'doughnut',
+            data: { labels: [], datasets: [] },
+            options: { responsive: true }
+        });
+        new Chart(document.getElementById('agentChart').getContext('2d'), {
+            type: 'bar',
+            data: { labels: [], datasets: [] },
+            options: { responsive: true }
+        });
+    </script>
+</body>
+</html>
