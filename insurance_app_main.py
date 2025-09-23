@@ -25,7 +25,7 @@ from insurance_app.routers.routers_dashboard import router as dashboard_router
 
 app = FastAPI(title="Insurance Company of Africa Management System")
 
-app.include_router(dashboard_router, prefix="/", tags=["Dashboard"])
+app.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboard"])
 
 # Database configuration
 SQLALCHEMY_DATABASE_URL = "sqlite:///./insurance.db"  # or your database URL
@@ -646,6 +646,7 @@ def delete_reinsurance(reinsurance_id: int, db: Session = Depends(get_db)):
 async def login_page(request: Request):
 
     return templates.TemplateResponse("login.html", {"request": request})
+
 
 
 
