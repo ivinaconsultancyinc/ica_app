@@ -641,6 +641,15 @@ def delete_reinsurance(reinsurance_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"detail": "Reinsurance deleted"}
 
+@app.get("/login", response_class=HTMLResponse)
+
+async def login_page(request: Request):
+
+    return templates.TemplateResponse("login.html", {"request": request})
+
+
+
+
 
 
 
