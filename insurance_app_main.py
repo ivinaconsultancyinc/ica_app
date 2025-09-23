@@ -21,8 +21,11 @@ from insurance_app.routers.routers_audit import router as audit_router
 from insurance_app.routers.routers_ledger import router as ledger_router
 from insurance_app.routers.routers_reinsurance import router as reinsurance_router
 from insurance_app.models.models import Client, Policy, Product, Premium, Commission, Claim, Customer, Agent, Document, Audit, Ledger, Reinsurance
+from insurance_app.routers.routers_dashboard import router as dashboard_router
 
 app = FastAPI(title="Insurance Company of Africa Management System")
+
+app.include_router(dashboard_router, prefix="/", tags=["Dashboard"])
 
 # Database configuration
 SQLALCHEMY_DATABASE_URL = "sqlite:///./insurance.db"  # or your database URL
@@ -637,6 +640,7 @@ def delete_reinsurance(reinsurance_id: int, db: Session = Depends(get_db)):
     db.delete(reinsurance)
     db.commit()
     return {"detail": "Reinsurance deleted"}
+
 
 
 
