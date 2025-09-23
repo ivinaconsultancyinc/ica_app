@@ -10,3 +10,4 @@ pydantic[email]
 asyncpg
 psycopg2-binary
 python-multipart
+pandas
