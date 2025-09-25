@@ -647,6 +647,57 @@ async def login_page(request: Request):
 
     return templates.TemplateResponse("login.html", {"request": request})
 
+# ... previous imports and setup ...
+
+templates = Jinja2Templates(directory=os.path.join(os.path.dirname(__file__), "insurance_app", "templates"))
+
+# Database dependency
+
+def get_db():
+
+    db = SessionLocal()
+
+    try:
+
+        yield db
+
+    finally:
+
+        db.close()
+
+# --- Place your dashboard route here ---
+
+@app.get("/dashboard", response_class=HTMLResponse)
+
+async def dashboard_page(request: Request, db: Session = Depends(get_db)):
+
+    # Example: Query analytics and currency data from DB or service
+
+    analytics = get_dashboard_analytics(db)  # <-- implement this function
+
+    currency = "LRD"
+
+    return templates.TemplateResponse("dashboard.html", {
+
+        "request": request,
+
+        "analytics": analytics,
+
+        "currency": currency
+
+    })
+
+# ... other route definitions ...
+
+ 
+
+ 
+
+ 
+
+
+
+
 
 
 
