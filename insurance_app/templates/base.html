@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>{% block title %}Insurance Company of Africa{% endblock %}</title>
+
+    <!-- Google Fonts and your CSS -->
+
+    <link href=https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap rel="stylesheetref="/static/styleshared CSS/JS here -->
+
+</head>
+
+<body>
+
+    <header>
+
+        <!-- Company Logo (replace src with your actual logo path if available) -->
+
+        <img src="/static/logo.png" alt="Company Logo" style="height:48px;vertical-align:middle;">
+
+  Insurance Company of Africa</span>
+
+        <nav style="margin-top:10px;">
+
+            /Home</a> |
+
+            <a href="/dashboard">Dashboard</a> |
+
+/clientsClients</a> |
+
+            <a href="/policies">Policies</a>    <a href="/claims> |
+
+            /docsAPI Docs</a>
+
+        </nav>
+
+        <hr>
+
+    </header>
+
+    <main>
+
+        {% block content %}
+
+        <!-- Page-specific content will be injected here -->
+
+        {% endblock %}
+
+    </main>
+
+    <footer style="margin-top:40px;text-align:center;">
+
+        <hr>
+
+        <small>
+
+            © 2025 Insurance Company of Africa. All rights reserved.
+
+            <a href=mailto:support@insurancecompany.com>Contact>
+
+        </small>
+
+    </footer>
+
+</body>
+
+</html>
+
