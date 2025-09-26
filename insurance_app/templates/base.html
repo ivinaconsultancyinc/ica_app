@@ -8,63 +8,521 @@
 
     <title>{% block title %}Insurance Company of Africa{% endblock %}</title>
 
-    <!-- Google Fonts and your CSS -->
+    https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap
 
-    <link href=https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap rel="stylesheetref="/static/styleshared CSS/JS here -->
+    /static/styles.css
+
+    <style>
+
+        body {
+
+            margin: 0;
+
+            font-family: 'Roboto', Arial, sans-serif;
+
+            background: #f5f6fa;
+
+            transition: background 0.3s, color 0.3s;
+
+        }
+
+        .container { display: flex; min-height: 100vh; }
+
+        .sidebar {
+
+            width: 230px;
+
+            background: #1a237e;
+
+            color: #fff;
+
+            padding: 0;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            position: relative;
+
+            z-index: 2;
+
+            transition: width 0.3s;
+
+        }
+
+        .sidebar.collapsed {
+
+            width: 70px;
+
+        }
+
+        .sidebar img.logo {
+
+            width: 60px;
+
+            margin: 32px 0 10px 0;
+
+            border-radius: 12px;
+
+            box-shadow: 0 2px 8px #0002;
+
+            transition: width 0.3s;
+
+        }
+
+        .sidebar.collapsed img.logo {
+
+            width: 40px;
+
+            margin: 20px 0 10px 0;
+
+        }
+
+        .sidebar h2 {
+
+            font-size: 1.1em;
+
+            font-weight: 700;
+
+            margin-bottom: 2em;
+
+            text-align: center;
+
+            transition: opacity 0.3s;
+
+        }
+
+        .sidebar.collapsed h2 {
+
+            opacity: 0;
+
+            height: 0;
+
+            margin: 0;
+
+            overflow: hidden;
+
+        }
+
+        .sidebar nav {
+
+            width: 100%;
+
+            flex: 1;
+
+        }
+
+        .sidebar nav a {
+
+            display: flex;
+
+            align-items: center;
+
+            color: #fff;
+
+            text-decoration: none;
+
+            padding: 14px 32px;
+
+            margin: 2px 0;
+
+            font-size: 1.07em;
+
+            border-left: 4px solid transparent;
+
+            transition: background 0.2s, border-color 0.2s, padding 0.3s;
+
+        }
+
+        .sidebar nav a .icon {
+
+            margin-right: 14px;
+
+            font-size: 1.2em;
+
+            min-width: 24px;
+
+            text-align: center;
+
+        }
+
+        .sidebar.collapsed nav a {
+
+            justify-content: center;
+
+            padding: 14px 0;
+
+        }
+
+        .sidebar.collapsed nav a span:not(.icon) {
+
+            display: none;
+
+        }
+
+        .sidebar nav a.active, .sidebar nav a:hover {
+
+            background: #3949ab;
+
+            border-left: 4px solid #ffb300;
+
+        }
+
+        .sidebar .user-section {
+
+            margin-top: auto;
+
+            text-align: center;
+
+            padding: 24px 0 18px 0;
+
+            transition: opacity 0.3s;
+
+        }
+
+        .sidebar img.avatar {
+
+            width: 48px;
+
+            height: 48px;
+
+            border-radius: 50%;
+
+            margin-bottom: 6px;
+
+            border: 2px solid #fff;
+
+            box-shadow: 0 1px 4px #0002;
+
+            transition: width 0.3s, height 0.3s;
+
+        }
+
+        .sidebar.collapsed img.avatar {
+
+            width: 32px;
+
+            height: 32px;
+
+        }
+
+        .sidebar .welcome {
+
+            font-size: 0.95em;
+
+            color: #ffecb3;
+
+            transition: opacity 0.3s;
+
+        }
+
+        .sidebar.collapsed .welcome {
+
+            opacity: 0;
+
+            height: 0;
+
+            margin: 0;
+
+            overflow: hidden;
+
+        }
+
+        .sidebar .sidebar-toggle, .sidebar .dark-toggle {
+
+            position: absolute;
+
+            top: 18px;
+
+            background: none;
+
+            border: none;
+
+            color: #fff;
+
+            font-size: 1.5em;
+
+            cursor: pointer;
+
+            z-index: 3;
+
+        }
+
+        .sidebar .sidebar-toggle {
+
+            left: 10px;
+
+        }
+
+        .sidebar .dark-toggle {
+
+            right: 10px;
+
+        }
+
+        .main-content {
+
+            flex: 1;
+
+            padding: 40px 30px;
+
+            background: #f5f6fa;
+
+            min-width: 0;
+
+            transition: background 0.3s, color 0.3s;
+
+        }
+
+        body.dark-mode, .main-content.dark-mode {
+
+            background: #181a20 !important;
+
+            color: #e0e0e0 !important;
+
+        }
+
+        .sidebar.dark-mode {
+
+            background: #23272f !important;
+
+            color: #fff !important;
+
+        }
+
+        .sidebar.dark-mode nav a.active, .sidebar.dark-mode nav a:hover {
+
+            background: #333b4d !important;
+
+            border-left: 4px solid #ffd600 !important;
+
+        }
+
+        .sidebar.dark-mode .welcome {
+
+            color: #ffe082 !important;
+
+        }
+
+        footer {
+
+            text-align: center;
+
+            padding: 20px 0;
+
+            background: #eee;
+
+            color: #333;
+
+            transition: background 0.3s, color 0.3s;
+
+        }
+
+        body.dark-mode footer {
+
+            background: #23272f;
+
+            color: #bbb;
+
+        }
+
+        @media (max-width: 900px) {
+
+            .container { flex-direction: column; }
+
+            .sidebar {
+
+                width: 100%;
+
+                flex-direction: row;
+
+                align-items: flex-start;
+
+                padding: 0 0 0 0;
+
+                min-height: unset;
+
+            }
+
+            .sidebar.collapsed {
+
+                width: 60px;
+
+            }
+
+            .sidebar nav {
+
+                display: flex;
+
+                flex-direction: row;
+
+                width: 100%;
+
+                justify-content: space-around;
+
+            }
+
+            .sidebar nav a {
+
+                padding: 12px 8px;
+
+                font-size: 1em;
+
+                border-left: none;
+
+                border-bottom: 3px solid transparent;
+
+            }
+
+            .sidebar nav a.active, .sidebar nav a:hover {
+
+                background: #3949ab;
+
+                border-bottom: 3px solid #ffb300;
+
+            }
+
+            .sidebar img.logo, .sidebar .user-section {
+
+                display: none;
+
+            }
+
+            .sidebar .sidebar-toggle, .sidebar .dark-toggle {
+
+                top: 10px;
+
+            }
+
+        }
+
+    </style>
 
 </head>
 
 <body>
 
-    <header>
+    <div class="container">
 
-        <!-- Company Logo (replace src with your actual logo path if available) -->
+        <aside class="sidebar" id="sidebar">
 
-        <img src="/static/logo.png" alt="Company Logo" style="height:48px;vertical-align:middle;">
+            <button class="sidebar-toggle" onclick="toggleSidebar()" title="Collapse Sidebar">☰</button>
 
-  Insurance Company of Africa</span>
+            <button class="dark-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
 
-        <nav style="margin-top:10px;">
+            /static/logo.png
 
-            /Home</a> |
+            <h2>🏢 Insurance Company of Africa</h2>
 
-            <a href="/dashboard">Dashboard</a> |
+            <nav>
 
-/clientsClients</a> |
+                /
 
-            <a href="/policies">Policies</a>    <a href="/claims> |
+                    <span class="icon">🏠</span> <span>Home</span>
 
-            /docsAPI Docs</a>
+                </a>
 
-        </nav>
+                /dashboard
 
-        <hr>
+                    <span class="icon">📊</span> <span>Dashboard</span>
 
-    </header>
+                </a>
 
-    <main>
+                /clients
 
-        {% block content %}
+                    <span class="icon">👥</span> <span>Clients</span>
 
-        <!-- Page-specific content will be injected here -->
+                </a>
 
-        {% endblock %}
+                /policies
 
-    </main>
+                    <span class="icon">📋</span> <span>Policies</span>
 
-    <footer style="margin-top:40px;text-align:center;">
+                </a>
+
+                /claims
+
+                    <span class="icon">📝</span> <span>Claims</span>
+
+                </a>
+
+                /docs
+
+                    <span class="icon">📚</span> <span>API Docs</span>
+
+                </a>
+
+                /login
+
+                    <span class="icon">🔐</span> <span>Login</span>
+
+                </a>
+
+            </nav>
+
+            <div class="user-section">
+
+                /static/user_avatar.png
+
+                <div class="welcome">Welcome!</div>
+
+            </div>
+
+        </aside>
+
+        <main class="main-content" id="main-content">
+
+            {% block content %}
+
+            <!-- Page-specific content will be injected here -->
+
+            {% endblock %}
+
+        </main>
+
+    </div>
+
+    <footer>
 
         <hr>
 
         <small>
 
-            © 2025 Insurance Company of Africa. All rights reserved.
+            © 2024 Insurance Company of Africa. All rights reserved.
 
-            <a href=mailto:support@insurancecompany.com>Contact>
+            mailto:support@insurancecompany.comContact Support</a>
 
         </small>
 
     </footer>
+
+    <script>
+
+        // Collapsible sidebar
+
+        function toggleSidebar() {
+
+            var sidebar = document.getElementById('sidebar');
+
+            sidebar.classList.toggle('collapsed');
+
+        }
+
+        // Dark mode toggle
+
+        function toggleDarkMode() {
+
+            document.body.classList.toggle('dark-mode');
+
+            document.getElementById('sidebar').classList.toggle('dark-mode');
+
+            document.getElementById('main-content').classList.toggle('dark-mode');
+
+        }
+
+    </script>
 
 </body>
 
