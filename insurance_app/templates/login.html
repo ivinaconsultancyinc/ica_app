@@ -1,75 +1,106 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login - Insurance Company of Africa</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body { font-family: Arial, sans-serif; background: #f7f7f7; }
-        .login-container {
-            max-width: 350px;
-            margin: 80px auto;
-            background: #fff;
-            padding: 2em;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px #eee;
-        }
-        h2 { text-align: center; color: #1a237e; }
-        label { display: block; margin-top: 1em; }
-        input[type="text"], input[type="password"] {
-            width: 100%; padding: 0.7em; margin-top: 0.3em; border: 1px solid #ccc; border-radius: 4px;
-        }
-        button {
-            width: 100%; padding: 0.8em; margin-top: 1.5em;
-            background: #1a237e; color: #fff; border: none; border-radius: 4px; font-size: 1em;
-            cursor: pointer;
-        }
-        .error { color: #d32f2f; text-align: center; margin-top: 1em; }
-    </style>
-</head>
-<body>
-    <div class="login-container">
-        <h2>Login</h2>
-        <form id="loginForm" method="post" onsubmit="return login(event)">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required autocomplete="username">
+{% extends "base.html" %}
 
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required autocomplete="current-password">
+{% block title %}Login | Insurance Company of Africa{% endblock %}
 
-            <button type="submit">Sign In</button>
-        </form>
-        <div id="errorMsg" class="error"></div>
-    </div>
-    <script>
-        async function login(event) {
-            event.preventDefault();
-            document.getElementById('errorMsg').textContent = '';
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const formData = new URLSearchParams();
-            formData.append('username', username);
-            formData.append('password', password);
+{% block content %}
 
-            try {
-                const response = await fetch('/token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: formData
-                });
-                const data = await response.json();
-                if (response.ok && data.access_token) {
-                    // Store token securely (e.g., localStorage/sessionStorage)
-                    localStorage.setItem('jwt_token', data.access_token);
-                    // Redirect to dashboard or reload page
-                    window.location.href = '/dashboard';
-                } else {
-                    document.getElementById('errorMsg').textContent = data.detail || 'Login failed';
-                }
-            } catch (err) {
-                document.getElementById('errorMsg').textContent = 'Network error. Please try again.';
-            }
-        }
-    </script>
-</body>
-</html>
+<div style="max-width:350px; margin:40px auto; background:#fff; padding:32px 28px 24px 28px; border-radius:8px; box-shadow:0 2px 12px #0001;"></div style="max-width:350px; margin:40px auto; background:#fff; padding:32px 28px 24px 28px; border-radius:8px; box-shadow:0 2px 12px #0001;">
+
+    <div style="text-align:center; margin-bottom:20px;"></div style="text-align:center; margin-bottom:20px;">
+
+        /static/logo.png
+
+        <h2 style="margin:10px 0 0 0;">Sign In</h2 style="margin:10px 0 0 0;">
+
+ 
+
+    {% if error %}
+
+        <div style="color: #b71c1c; background: #ffebee; border: 1px solid #b71c1c; padding: 10px; margin-bottom: 20px; border-radius: 4px;"></div style="color: #b71c1c; background: #ffebee; border: 1px solid #b71c1c; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+
+            {{ error }}
+
+        
+
+    {% endif %}
+
+    /login
+
+        <label for="username" style="font-weight:500;">👤 Username
+</label for="username" style="font-weight:500;">
+
+        <input type="text" id="username" name="username" required style="width:100%; padding:10px; margin-bottom:16px; border-radius:4px; border:1px solid #ccc;">
+</input type="text" id="username" name="username" required style="width:100%; padding:10px; margin-bottom:16px; border-radius:4px; border:1px solid #ccc;">
+
+        
+
+        <label for="password" style="font-weight:500;">🔒 Password
+</label for="password" style="font-weight:500;">
+
+        <input type="password" id="password" name="password" required style="width:100%; padding:10px; margin-bottom:10px; border-radius:4px; border:1px solid #ccc;">
+</input type="password" id="password" name="password" required style="width:100%; padding:10px; margin-bottom:10px; border-radius:4px; border:1px solid #ccc;">
+
+        
+
+        <label style="display:flex; align-items:center; margin-bottom:16px;"></label style="display:flex; align-items:center; margin-bottom:16px;">
+
+            <input type="checkbox" name="remember_me" style="margin-right:8px;"></input type="checkbox" name="remember_me" style="margin-right:8px;">
+
+            Remember me
+
+        
+
+        
+
+        <button type="submit" style="width:100%; background:#1a237e; color:#fff; border:none; padding:12px 0; border-radius:4px; font-size:1.1em; cursor:pointer;"></button type="submit" style="width:100%; background:#1a237e; color:#fff; border:none; padding:12px 0; border-radius:4px; font-size:1.1em; cursor:pointer;">
+
+            <span style="font-size:1.2em;">➡️ Sign In</span style="font-size:1.2em;">
+
+        
+
+    
+
+    <div style="margin:20px 0; text-align:center;"></div style="margin:20px 0; text-align:center;">
+
+        <span style="color:#888;">or sign in with</span style="color:#888;">
+
+        <div style="margin-top:10px;"></div style="margin-top:10px;">
+
+            /auth/google
+
+                /static/google_icon.png
+
+                Google
+
+            
+
+            /auth/facebook
+
+                /static/facebook_icon.png
+
+                Facebook
+
+            
+
+            /auth/microsoft
+
+                /static/microsoft_icon.png
+
+                Microsoft
+
+            
+
+        
+
+    
+
+    <p style="margin-top:18px; text-align:center;"></p style="margin-top:18px; text-align:center;">
+
+        /reset-passwordForgot your password?
+
+    
+
+{% endblock %}
+
+ 
+
