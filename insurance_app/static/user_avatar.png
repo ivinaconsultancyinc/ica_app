@@ -1,1 +1,283 @@
+import os
+import io
+from PIL import Image, ImageDraw, ImageFont
+import random
+import hashlib
+from fastapi import HTTPException
+from typing import Optional
 
+class UserAvatarGenerator:
+    """
+    User avatar generator for the Insurance Company of Africa Management System.
+    Creates personalized avatars based on user names and customizable parameters.
+    """
+    
+    def __init__(self, avatar_dir: str = "insurance_app/static/avatars"):
+        self.avatar_dir = avatar_dir
+        self.ensure_avatar_directory()
+        
+        # Color palette for professional insurance app
+        self.background_colors = [
+            "#3498db",  # Professional blue
+            "#2ecc71",  # Success green
+            "#e74c3c",  # Insurance red
+            "#f39c12",  # Warning orange
+            "#9b59b6",  # Premium purple
+            "#1abc9c",  # Teal
+            "#34495e",  # Dark gray
+            "#16a085",  # Dark teal
+        ]
+        
+        self.text_color = "#ffffff"  # White text for contrast
+        
+    def ensure_avatar_directory(self):
+        """Create avatar directory if it doesn't exist"""
+        if not os.path.exists(self.avatar_dir):
+            os.makedirs(self.avatar_dir, exist_ok=True)
+            
+    def get_initials(self, name: str) -> str:
+        """Extract initials from full name"""
+        if not name:
+            return "UN"  # Unknown user
+            
+        words = name.strip().split()
+        if len(words) == 1:
+            # Single name - use first two letters
+            return words[0][:2].upper()
+        elif len(words) >= 2:
+            # Multiple names - use first letter of first two words
+            return (words[0][0] + words[1][0]).upper()
+        else:
+            return "UN"
+            
+    def get_consistent_color(self, text: str) -> str:
+        """Get consistent color based on text hash"""
+        hash_object = hashlib.md5(text.encode())
+        hash_hex = hash_object.hexdigest()
+        color_index = int(hash_hex[:2], 16) % len(self.background_colors)
+        return self.background_colors[color_index]
+        
+    def create_avatar(
+        self, 
+        name: str, 
+        size: int = 200,
+        user_type: str = "client",
+        save_file: bool = True
+    ) -> str:
+        """
+        Create a user avatar PNG image
+        
+        Args:
+            name: User's full name
+            size: Avatar size in pixels (square)
+            user_type: Type of user (client, agent, customer, admin)
+            save_file: Whether to save the file to disk
+            
+        Returns:
+            Path to the created avatar file
+        """
+        try:
+            # Get initials and consistent color
+            initials = self.get_initials(name)
+            bg_color = self.get_consistent_color(name.lower())
+            
+            # Create image
+            image = Image.new('RGB', (size, size), bg_color)
+            draw = ImageDraw.Draw(image)
+            
+            # Try to use a nice font, fallback to default
+            try:
+                # Calculate font size based on image size
+                font_size = int(size * 0.4)
+                font = ImageFont.truetype("arial.ttf", font_size)
+            except (OSError, IOError):
+                # Fallback to default font
+                font_size = int(size * 0.3)
+                try:
+                    font = ImageFont.load_default()
+                except:
+                    font = None
+            
+            # Calculate text position to center it
+            if font:
+                bbox = draw.textbbox((0, 0), initials, font=font)
+                text_width = bbox[2] - bbox[0]
+                text_height = bbox[3] - bbox[1]
+            else:
+                # Approximate text size for default font
+                text_width = len(initials) * (size // 8)
+                text_height = size // 6
+            
+            text_x = (size - text_width) // 2
+            text_y = (size - text_height) // 2
+            
+            # Draw text
+            draw.text(
+                (text_x, text_y), 
+                initials, 
+                fill=self.text_color, 
+                font=font
+            )
+            
+            # Add a subtle border for professional look
+            border_width = max(1, size // 100)
+            draw.rectangle(
+                [(0, 0), (size-1, size-1)], 
+                outline=bg_color, 
+                width=border_width
+            )
+            
+            # Generate filename
+            safe_name = "".join(c for c in name if c.isalnum() or c in (' ', '-', '_')).strip()
+            safe_name = safe_name.replace(' ', '_').lower()
+            filename = f"{user_type}_{safe_name}_{size}x{size}.png"
+            filepath = os.path.join(self.avatar_dir, filename)
+            
+            if save_file:
+                # Save image
+                image.save(filepath, 'PNG', quality=95)
+                return filepath
+            else:
+                # Return image as bytes for API response
+                img_byte_arr = io.BytesIO()
+                image.save(img_byte_arr, format='PNG')
+                return img_byte_arr.getvalue()
+                
+        except Exception as e:
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Failed to create avatar: {str(e)}"
+            )
+    
+    def create_default_avatar(self, user_type: str = "client", size: int = 200) -> str:
+        """Create a default avatar for unknown users"""
+        return self.create_avatar("Unknown User", size, user_type)
+    
+    def get_avatar_url(self, name: str, user_type: str = "client", size: int = 200) -> str:
+        """Get the URL path for an avatar (for use in templates)"""
+        safe_name = "".join(c for c in name if c.isalnum() or c in (' ', '-', '_')).strip()
+        safe_name = safe_name.replace(' ', '_').lower()
+        filename = f"{user_type}_{safe_name}_{size}x{size}.png"
+        return f"/static/avatars/{filename}"
+
+
+# Integration with your FastAPI app
+def setup_avatar_routes(app, avatar_generator: UserAvatarGenerator):
+    """Add avatar-related routes to your FastAPI app"""
+    
+    @app.post("/api/avatars/generate")
+    async def generate_user_avatar(
+        name: str,
+        user_type: str = "client",
+        size: int = 200
+    ):
+        """Generate a new avatar for a user"""
+        try:
+            filepath = avatar_generator.create_avatar(name, size, user_type)
+            avatar_url = avatar_generator.get_avatar_url(name, user_type, size)
+            
+            return {
+                "success": True,
+                "avatar_url": avatar_url,
+                "filepath": filepath,
+                "message": f"Avatar created for {name}"
+            }
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+    
+    @app.get("/api/avatars/url/{user_type}/{name}")
+    async def get_avatar_url(name: str, user_type: str = "client", size: int = 200):
+        """Get avatar URL for a user (creates if doesn't exist)"""
+        try:
+            avatar_url = avatar_generator.get_avatar_url(name, user_type, size)
+            filepath = os.path.join(avatar_generator.avatar_dir, 
+                                  avatar_url.split('/')[-1])
+            
+            # Create avatar if it doesn't exist
+            if not os.path.exists(filepath):
+                avatar_generator.create_avatar(name, size, user_type)
+            
+            return {
+                "avatar_url": avatar_url,
+                "name": name,
+                "user_type": user_type,
+                "size": size
+            }
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+
+# Usage example for your insurance app
+def create_sample_avatars():
+    """Create sample avatars for your insurance app"""
+    avatar_gen = UserAvatarGenerator()
+    
+    # Sample data for different user types
+    sample_users = {
+        "agents": [
+            "John Doe", "Sarah Johnson", "Michael Brown", 
+            "Lisa Wilson", "David Miller"
+        ],
+        "clients": [
+            "Robert Smith", "Emily Davis", "James Wilson",
+            "Maria Garcia", "Thomas Anderson"
+        ],
+        "customers": [
+            "Jennifer Taylor", "Christopher Lee", "Amanda White",
+            "Daniel Harris", "Michelle Clark"
+        ]
+    }
+    
+    created_avatars = []
+    
+    for user_type, names in sample_users.items():
+        for name in names:
+            try:
+                filepath = avatar_gen.create_avatar(name, 200, user_type.rstrip('s'))
+                avatar_url = avatar_gen.get_avatar_url(name, user_type.rstrip('s'), 200)
+                created_avatars.append({
+                    "name": name,
+                    "type": user_type.rstrip('s'),
+                    "filepath": filepath,
+                    "url": avatar_url
+                })
+                print(f"Created avatar for {name} ({user_type.rstrip('s')})")
+            except Exception as e:
+                print(f"Failed to create avatar for {name}: {e}")
+    
+    return created_avatars
+
+
+# Integration code for your main.py
+"""
+To integrate this with your main FastAPI app, add this to your main.py:
+
+# Add this import at the top
+from .user_avatar import UserAvatarGenerator, setup_avatar_routes
+
+# Add this after your app initialization
+avatar_generator = UserAvatarGenerator()
+setup_avatar_routes(app, avatar_generator)
+
+# Optional: Create sample avatars on startup
+@app.on_event("startup")
+async def create_sample_data():
+    from .user_avatar import create_sample_avatars
+    create_sample_avatars()
+"""
+
+if __name__ == "__main__":
+    # Test the avatar generator
+    print("Testing User Avatar Generator...")
+    
+    # Create instance
+    avatar_gen = UserAvatarGenerator()
+    
+    # Create sample avatars
+    sample_avatars = create_sample_avatars()
+    
+    print(f"Created {len(sample_avatars)} sample avatars:")
+    for avatar in sample_avatars[:5]:  # Show first 5
+        print(f"  - {avatar['name']} ({avatar['type']}): {avatar['url']}")
+    
+    print("Avatar generator test completed!")
