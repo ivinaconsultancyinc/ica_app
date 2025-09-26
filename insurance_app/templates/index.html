@@ -1,267 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Insurance Company of Africa - Management System</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Favicon -->
-  <link rel="shortcut icon" href="/static/favicon.ico">
-  <!-- Google Fonts for a modern look -->
-  https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap
-  <style>
-    :root {
-      --primary: #1a237e;
-      --accent: #1976d2;
-      --background: #f5f7fa;
-      --card-bg: #fff;
-      --text: #222;
-      --muted: #666;
-      --border-radius: 14px;
-      --shadow: 0 2px 8px rgba(0,0,0,0.07);
-    }
-    body {
-      background: var(--background);
-      color: var(--text);
-      font-family: 'Roboto', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: var(--primary);
-      color: #fff;
-      padding: 2rem 1rem 1rem 1rem;
-      text-align: center;
-      border-bottom-left-radius: var(--border-radius);
-      border-bottom-right-radius: var(--border-radius);
-      box-shadow: var(--shadow);
-    }
-    header img {
-      height: 60px;
-      margin-bottom: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-      background: #fff;
-      padding: 4px;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2.2rem;
-      letter-spacing: 1px;
-    }
-    header p {
-      margin: 0.5rem 0 0 0;
-      font-size: 1.1rem;
-      color: #cfd8dc;
-    }
-    nav {
-      background: var(--accent);
-      padding: 0.5rem 1rem;
-      text-align: center;
-      border-radius: var(--border-radius);
-      margin: 1.5rem auto 2rem auto;
-      max-width: 900px;
-      box-shadow: var(--shadow);
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      margin: 0 1rem;
-      font-weight: 500;
-      font-size: 1rem;
-      transition: color 0.2s;
-    }
-    nav a:hover {
-      color: #ffeb3b;
-      text-decoration: underline;
-    }
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-    .modules {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      justify-content: center;
-    }
-    .card {
-      background: var(--card-bg);
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow);
-      flex: 1 1 260px;
-      min-width: 260px;
-      max-width: 320px;
-      padding: 1.5rem 1rem;
-      margin-bottom: 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      transition: box-shadow 0.2s, transform 0.2s;
-    }
-    .card:hover {
-      box-shadow: 0 6px 24px rgba(0,0,0,0.12);
-      transform: translateY(-4px) scale(1.02);
-    }
-    .card h3 {
-      margin-top: 0;
-      color: var(--accent);
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
-    .card p {
-      color: var(--muted);
-      font-size: 0.97rem;
-      margin-bottom: 1rem;
-    }
-    .card a {
-      display: inline-block;
-      background: var(--accent);
-      color: #fff;
-      text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      margin-right: 0.5rem;
-      margin-bottom: 0.5rem;
-      font-size: 0.97rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-      transition: background 0.2s, transform 0.2s;
-    }
-    .card a:hover {
-      background: #1565c0;
-      transform: translateY(-2px) scale(1.05);
-    }
-    .api-section {
-      background: #e3f2fd;
-      border-radius: var(--border-radius);
-      padding: 1.2rem 1rem;
-      margin: 2rem 0;
-      box-shadow: var(--shadow);
-    }
-    .api-section h4 {
-      margin-top: 0;
-      color: var(--primary);
-    }
-    .api-section ul {
-      padding-left: 1.2rem;
-      margin: 0.5rem 0 0 0;
-    }
-    .api-section li {
-      margin-bottom: 0.3rem;
-      font-size: 0.97rem;
-    }
-    .api-section a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .api-section a:hover {
-      text-decoration: underline;
-      color: #1565c0;
-    }
-    hr {
-      border: none;
-      border-top: 2px solid var(--accent);
-      margin: 2rem 0;
-    }
-    footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.95rem;
-      margin: 2rem 0 1rem 0;
-    }
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
-      margin: 0 0.5rem;
-    }
-    footer a:hover {
-      text-decoration: underline;
-    }
-    @media (max-width: 700px) {
-      .modules {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      .card {
-        max-width: 100%;
-      }
-      .container {
-        padding: 0 0.5rem;
-      }
-      nav {
-        font-size: 0.95rem;
-        padding: 0.5rem 0.2rem;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <img src="/static/logo.png" alt="Company Logo">
-    <h1>🏢 Insurance Company of Africa</h1>
-    <p>Comprehensive Management System &mdash; System Online</p>
-  </header>
-  <nav>
-    <a href="/">Home</a>
-    <a href="/clients">Clients</a>
-    <a href="/policies">Policies</a>
-    <a href="/claims">Claims</a>
-    <a href="/docs">API Docs</a>
-  </nav>
-  <div class="container">
-    <div class="modules">
-      <div class="card">
-        <h3>👥 Client Management</h3>
-        <p>Manage client information, policies, and relationships. Track customer interactions and maintain comprehensive records.</p>
-        <a href="/clients">View Clients</a>
-        <a href="/customers">Customers</a>
-      </div>
-      <div class="card">
-        <h3>📋 Policy Administration</h3>
-        <p>Create, modify, and track insurance policies. Manage policy lifecycle from inception to claims.</p>
-        <a href="/policies">Manage Policies</a>
-        <a href="/products">Products</a>
-      </div>
-      <div class="card">
-        <h3>💰 Financial Operations</h3>
-        <p>Handle premiums, commissions, and financial transactions. Monitor cash flow and generate reports.</p>
-        <a href="/premiums">Premiums</a>
-        <a href="/ledger">Ledger</a>
-      </div>
-      <div class="card">
-        <h3>🎯 Claims & Risk</h3>
-        <p>Process insurance claims and manage reinsurance operations. Track claim status and settlements.</p>
-        <a href="/claims">Claims</a>
-        <a href="/reinsurance">Reinsurance</a>
-      </div>
-    </div>
-    <hr>
-    <div class="api-section">
-      <h4>🔗 API Endpoints</h4>
-      <ul>
-        <li><a href="/clients">/clients</a> – Client management operations</li>
-        <li><a href="/policies">/policies</a> – Policy administration</li>
-        <li><a href="/products">/products</a> – Insurance products catalog</li>
-        <li><a href="/premiums">/premiums</a> – Premium calculations & payments</li>
-        <li><a href="/commissions">/commissions</a> – Agent commission tracking</li>
-        <li><a href="/claims">/claims</a> – Claims processing & loans</li>
-        <li><a href="/customers">/customers</a> – Customer relationship management</li>
-        <li><a href="/agents">/agents</a> – Agent management system</li>
-        <li><a href="/documents">/documents</a> – Document management</li>
-        <li><a href="/audit">/audit</a> – Audit trail & compliance</li>
-        <li><a href="/ledger">/ledger</a> – Financial ledger operations</li>
-        <li><a href="/reinsurance">/reinsurance</a> – Reinsurance management</li>
-      </ul>
-      <p>12 API Modules | 50+ Endpoints | 24/7 Availability
-        <a href="/docs">📚 API Documentation</a> |
-        <a href="/redoc">📖 ReDoc</a>
-      </p>
-    </div>
-  </div>
-  <footer>
-    © 2024 Insurance Company of Africa. All rights reserved.<br>
-    <a href="mailto:support@insurancecompany.com">Contact Support</a>
-  </footer>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Home | Insurance Company of Africa{% endblock %}
+
+{% block content %}
+
+🏢 Insurance Company of Africa
+
+Comprehensive Management System — System Online
+
+    
+
+👥 Client Management
+
+    
+
+Manage client information, policies, and relationships. Track customer interactions and maintain comprehensive records.
+
+    <a href=" clients"="">View> | /customersCustomers</a href=">
+
+    
+
+📋 Policy Administration
+
+    
+
+Create, modify, and track insurance policies. Manage policy lifecycle from inception to claims.
+
+    <a href=" policies"="">Manage Policies | <a href=" products"="">ProductsFinancial Operations Section --></a href="></a href=">
+
+    
+
+💰 Financial Operations
+
+    
+
+Handle premiums, commissions, and financial transactions. Monitor cash flow and generate reports.
+
+    /premiumsPremiums | /ledgerLedger
+
+    
+
+🎯 Claims & Risk
+
+    
+
+Process insurance claims and manage reinsurance operations. Track claim status and settlements.
+
+    <a href=" claims"="">Claims | <a href=" reinsurancection=""></a href="></a href=">
+
+    
+
+🔗 API Endpoints
+
+    
+
+        
+
+    <a href=" clients"="">/clients – Client management operations</a href=">
+
+>/policies/policies – Policy administration
+
+        
+
+    /products/products – Insurance products catalog
+
+        
+
+    /premiums/premiums – Premium calculations & payments
+
+        
+
+    /commissions/commissions – Agent commission tracking
+
+        
+
+    /claims/claims – Claims processing & loans
+
+        
+
+    /customers/customers – Customer relationship management
+
+        
+
+    /agents/agents – Agent management system
+
+        
+
+    /documents/documents – Document management
+
+        
+
+    /audit/audit – Audit trail & compliance
+
+        
+
+    <a href=" ledger"=""> – Financial ledger operations</a href=">
+
+        
+
+    /reinsurance/reinsurance – Reinsurance management
+
+    
+
+    
+
+        12 API Modules   |   50+ Endpoints   |   24/7 Availability
+
+        
+
+        <a href=" docs"="">📚 API Documentation</a href=">
+
+    
+
+{% endblock %}
+
+ 
+
