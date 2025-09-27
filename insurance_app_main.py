@@ -56,6 +56,10 @@ from insurance_app.routers.routers_reinsurance import router as reinsurance_rout
 
 from insurance_app.routers.routers_dashboard import router as dashboard_router
 
+from insurance_app.database import engine, Base
+
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI(title="Insurance Company of Africa Management System")
 
 app.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboard"])
@@ -401,4 +405,5 @@ async def health_check():
 # (All your other API endpoints remain unchanged)
 
  
+
 
