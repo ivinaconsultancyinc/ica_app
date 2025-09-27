@@ -12,3 +12,4 @@ psycopg2-binary
 python-multipart
 pandas
 reportlab
+passlib[bcrypt]==1.7.4
