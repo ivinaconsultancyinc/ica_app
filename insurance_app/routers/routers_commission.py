@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, Depends
 from sqlalchemy.orm import Session
 from insurance_app.schemas.commission_schema import CommissionCreate, CommissionOut
 from insurance_app.models.commission import Commission
-from insurance_app.database import SessionLocal
+from insurance_app.database import get_db  # <-- Import get_db from your shared database.py
 
 router = APIRouter()
 
@@ -19,4 +19,5 @@ def create_commission(commission: CommissionCreate, db: Session = Depends(get_db
     db.add(new_commission)
     db.commit()
     db.refresh(new_commission)
+
     return new_commission
