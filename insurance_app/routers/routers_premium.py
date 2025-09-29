@@ -5,7 +5,7 @@ import uuid
 
 from insurance_app.schemas.premium_schema import PremiumCreate, PremiumUpdate, PremiumResponse
 from insurance_app.services.premium_service import PremiumService
-from insurance_app.database import SessionLocal
+from insurance_app.database import get_db  # <-- Import get_db from your shared database.py
 
 router = APIRouter()
 
@@ -48,3 +48,4 @@ def delete_premium(premium_id: uuid.UUID, db: Session = Depends(get_db)):
     service = PremiumService(db)
     service.delete_premium(premium_id)
     return {"message": "Premium deleted successfully"}
+
