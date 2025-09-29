@@ -10,12 +10,6 @@ from fastapi.templating import Jinja2Templates
 
 from fastapi.responses import RedirectResponse, HTMLResponse
 
-from sqlalchemy import create_engine
-
-from sqlalchemy.ext.declarative import declarative_base
-
-from sqlalchemy.orm import sessionmaker, Session
-
 from passlib.context import CryptContext
 
 # --- Password hashing context ---
@@ -26,9 +20,19 @@ def verify_password(plain_password, hashed_password):
 
     return pwd_context.verify(plain_password, hashed_password)
 
-# --- SQLAlchemy setup ---
+# --- Import database setup from your shared database.py ---
+
+from insurance_app.database import engine, Base, get_db
+
+# --- Import all models before table creation ---
 
 from insurance_app.models.models import User, Client, Policy, Product, Premium, Commission, Claim, Customer, Agent, Document, Audit, Ledger, Reinsurance
+
+# --- Create tables (for development/SQLite only) ---
+
+Base.metadata.create_all(bind=engine)
+
+# --- Import routers ---
 
 from insurance_app.routers.routers_client import router as client_router
 
@@ -56,33 +60,11 @@ from insurance_app.routers.routers_reinsurance import router as reinsurance_rout
 
 from insurance_app.routers.routers_dashboard import router as dashboard_router
 
-from insurance_app.database import engine, Base
-
-Base.metadata.create_all(bind=engine)
-
 app = FastAPI(title="Insurance Company of Africa Management System")
 
 app.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboard"])
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./insurance.db"
-
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-Base = declarative_base()
-
-def get_db():
-
-    db = SessionLocal()
-
-    try:
-
-        yield db
-
-    finally:
-
-        db.close()
+# --- Optional: include views router if present ---
 
 try:
 
@@ -92,7 +74,7 @@ except ImportError:
 
     views_router = None
 
-from insurance_app.connection import get_db  # Use your connection.py for DB session
+# --- Static files and templates ---
 
 static_dir = os.path.join(os.path.dirname(__file__), "insurance_app", "static")
 
@@ -107,6 +89,8 @@ else:
     print(f"Warning: Static directory '{static_dir}' does not exist. Static files will not be served.")
 
 templates = Jinja2Templates(directory=os.path.join(os.path.dirname(__file__), "insurance_app", "templates"))
+
+# --- Include all routers ---
 
 app.include_router(client_router, prefix="/clients", tags=["Clients"])
 
@@ -178,7 +162,7 @@ def check_session(session: str = Cookie(None)):
 
 @app.get("/", response_class=HTMLResponse)
 
-async def read_root(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def read_root(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("index.html", {"request": request, "role": role})
 
@@ -188,7 +172,7 @@ async def read_root(request: Request, db: Session = Depends(get_db), role: str =
 
 @app.get("/agents", response_class=HTMLResponse)
 
-async def agents_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def agents_page(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("agents.html", {"request": request, "role": role})
 
@@ -198,7 +182,7 @@ async def agents_page(request: Request, db: Session = Depends(get_db), role: str
 
 @app.get("/claims", response_class=HTMLResponse)
 
-async def claims_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def claims_page(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("claims.html", {"request": request, "role": role})
 
@@ -208,7 +192,7 @@ async def claims_page(request: Request, db: Session = Depends(get_db), role: str
 
 @app.get("/audit", response_class=HTMLResponse, dependencies=[require_role(["admin"])])
 
-async def audit_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def audit_page(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("audit.html", {"request": request, "role": role})
 
@@ -218,7 +202,7 @@ async def audit_page(request: Request, db: Session = Depends(get_db), role: str 
 
 @app.get("/commission", response_class=HTMLResponse)
 
-async def commission_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def commission_page(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("commission.html", {"request": request, "role": role})
 
@@ -228,7 +212,7 @@ async def commission_page(request: Request, db: Session = Depends(get_db), role:
 
 @app.get("/clients", response_class=HTMLResponse)
 
-async def clients_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def clients_page(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("clients.html", {"request": request, "role": role})
 
@@ -238,7 +222,7 @@ async def clients_page(request: Request, db: Session = Depends(get_db), role: st
 
 @app.get("/customers", response_class=HTMLResponse)
 
-async def customers_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def customers_page(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("customers.html", {"request": request, "role": role})
 
@@ -248,7 +232,7 @@ async def customers_page(request: Request, db: Session = Depends(get_db), role: 
 
 @app.get("/documents", response_class=HTMLResponse)
 
-async def documents_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def documents_page(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("documents.html", {"request": request, "role": role})
 
@@ -258,7 +242,7 @@ async def documents_page(request: Request, db: Session = Depends(get_db), role: 
 
 @app.get("/ledger", response_class=HTMLResponse)
 
-async def ledger_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def ledger_page(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("ledger.html", {"request": request, "role": role})
 
@@ -268,7 +252,7 @@ async def ledger_page(request: Request, db: Session = Depends(get_db), role: str
 
 @app.get("/policies", response_class=HTMLResponse)
 
-async def policies_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def policies_page(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("policies.html", {"request": request, "role": role})
 
@@ -278,7 +262,7 @@ async def policies_page(request: Request, db: Session = Depends(get_db), role: s
 
 @app.get("/premiums", response_class=HTMLResponse)
 
-async def premiums_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def premiums_page(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("premiums.html", {"request": request, "role": role})
 
@@ -288,7 +272,7 @@ async def premiums_page(request: Request, db: Session = Depends(get_db), role: s
 
 @app.get("/products", response_class=HTMLResponse)
 
-async def products_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def products_page(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("products.html", {"request": request, "role": role})
 
@@ -298,7 +282,7 @@ async def products_page(request: Request, db: Session = Depends(get_db), role: s
 
 @app.get("/reinsurance", response_class=HTMLResponse)
 
-async def reinsurance_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def reinsurance_page(request: Request, db: Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
 
     response = templates.TemplateResponse("reinsurance.html", {"request": request, "role": role})
 
@@ -326,7 +310,7 @@ async def login_post(
 
     remember_me: str = Form(None),
 
-    db: Session = Depends(get_db)
+    db: Depends(get_db)
 
 ):
 
@@ -405,5 +389,4 @@ async def health_check():
 # (All your other API endpoints remain unchanged)
 
  
-
 
