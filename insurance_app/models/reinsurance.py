@@ -4,7 +4,7 @@ from datetime import datetime
 
 class ReinsuranceContract(Base):
     __tablename__ = "reinsurance_contracts"
-
+    __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, index=True)
     insurer = Column(String(100), nullable=False)
     reinsurer = Column(String(100), nullable=False)
@@ -14,4 +14,5 @@ class ReinsuranceContract(Base):
     effective_date = Column(DateTime, nullable=False)
     expiration_date = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+
 
