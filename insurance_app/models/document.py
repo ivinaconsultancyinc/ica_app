@@ -5,7 +5,7 @@ from datetime import datetime
 
 class Document(Base):
     __tablename__ = "documents"
-
+    __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, index=True)
     filename = Column(String, nullable=False)
     file_path = Column(String, nullable=False)
@@ -16,3 +16,4 @@ class Document(Base):
 
     # Relationships
     uploader = relationship("User", back_populates="documents", lazy="joined")
+
