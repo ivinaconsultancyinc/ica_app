@@ -10,7 +10,7 @@ class GenderEnum(str, enum.Enum):
 
 class Customer(Base):
     __tablename__ = "customers"
-
+    __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
@@ -24,3 +24,4 @@ class Customer(Base):
     # Relationships
     policies = relationship("Policy", back_populates="customer", cascade="all, delete-orphan")
     claims = relationship("Claim", back_populates="customer", cascade="all, delete-orphan")
+
