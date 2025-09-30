@@ -2,11 +2,13 @@ from sqlalchemy import Column, Integer, String, Float, Date, DateTime, ForeignKe
 
 from sqlalchemy.orm import relationship
 
-from insurance_app.database import Base  # <-- Import Base from your shared database.py
+from insurance_app.database import Base  # Import Base from your shared database.py
 
 class User(Base):
 
     __tablename__ = "users"
+
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
 
@@ -19,6 +21,8 @@ class User(Base):
 class Client(Base):
 
     __tablename__ = "clients"
+
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
 
@@ -34,13 +38,15 @@ class Policy(Base):
 
     __tablename__ = "policies"
 
+    __table_args__ = {'extend_existing': True}
+
     id = Column(Integer, primary_key=True, index=True)
 
     policy_number = Column(String, unique=True, nullable=False)
 
-    client_id = Column(Integer, ForeignKey("clients.id"))      # FIXED
+    client_id = Column(Integer, ForeignKey("clients.id"))  # FIXED
 
-    product_id = Column(Integer, ForeignKey("products.id"))    # FIXED
+    product_id = Column(Integer, ForeignKey("products.id"))  # FIXED
 
     start_date = Column(Date)
 
@@ -60,6 +66,8 @@ class Product(Base):
 
     __tablename__ = "products"
 
+    __table_args__ = {'extend_existing': True}
+
     id = Column(Integer, primary_key=True, index=True)
 
     name = Column(String, nullable=False)
@@ -72,9 +80,11 @@ class Premium(Base):
 
     __tablename__ = "premiums"
 
+    __table_args__ = {'extend_existing': True}
+
     id = Column(Integer, primary_key=True, index=True)
 
-    policy_id = Column(Integer, ForeignKey("policies.id"))     # FIXED
+    policy_id = Column(Integer, ForeignKey("policies.id"))  # FIXED
 
     amount = Column(Float, nullable=False)
 
@@ -88,9 +98,11 @@ class Commission(Base):
 
     __tablename__ = "commissions"
 
+    __table_args__ = {'extend_existing': True}
+
     id = Column(Integer, primary_key=True, index=True)
 
-    agent_id = Column(Integer, ForeignKey("agents.id"))        # FIXED
+    agent_id = Column(Integer, ForeignKey("agents.id"))  # FIXED
 
     amount = Column(Float, nullable=False)
 
@@ -102,9 +114,11 @@ class Claim(Base):
 
     __tablename__ = "claims"
 
+    __table_args__ = {'extend_existing': True}
+
     id = Column(Integer, primary_key=True, index=True)
 
-    policy_id = Column(Integer, ForeignKey("policies.id"))     # FIXED
+    policy_id = Column(Integer, ForeignKey("policies.id"))  # FIXED
 
     claim_number = Column(String, unique=True, nullable=False)
 
@@ -122,6 +136,8 @@ class Customer(Base):
 
     __tablename__ = "customers"
 
+    __table_args__ = {'extend_existing': True}
+
     id = Column(Integer, primary_key=True, index=True)
 
     name = Column(String, nullable=False)
@@ -133,6 +149,8 @@ class Customer(Base):
 class Agent(Base):
 
     __tablename__ = "agents"
+
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
 
@@ -148,6 +166,8 @@ class Document(Base):
 
     __tablename__ = "documents"
 
+    __table_args__ = {'extend_existing': True}
+
     id = Column(Integer, primary_key=True, index=True)
 
     title = Column(String, nullable=False)
@@ -159,6 +179,8 @@ class Document(Base):
 class Audit(Base):
 
     __tablename__ = "audit"
+
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
 
@@ -174,6 +196,8 @@ class Ledger(Base):
 
     __tablename__ = "ledger"
 
+    __table_args__ = {'extend_existing': True}
+
     id = Column(Integer, primary_key=True, index=True)
 
     entry_date = Column(Date)
@@ -188,9 +212,11 @@ class Reinsurance(Base):
 
     __tablename__ = "reinsurance"
 
+    __table_args__ = {'extend_existing': True}
+
     id = Column(Integer, primary_key=True, index=True)
 
-    policy_id = Column(Integer, ForeignKey("policies.id"))     # FIXED
+    policy_id = Column(Integer, ForeignKey("policies.id"))  # FIXED
 
     reinsurer = Column(String)
 
@@ -199,3 +225,4 @@ class Reinsurance(Base):
     start_date = Column(Date)
 
     end_date = Column(Date)
+
