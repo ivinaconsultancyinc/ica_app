@@ -11,7 +11,7 @@ class ClaimStatus(enum.Enum):
 
 class Claim(Base):
     __tablename__ = "claims"
-
+    __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, index=True)
     policy_id = Column(Integer, ForeignKey("policies.id"), nullable=False)
     claim_date = Column(Date, nullable=False)
@@ -21,4 +21,5 @@ class Claim(Base):
 
     # Relationships
     policy = relationship("Policy", back_populates="claims")
+
 
