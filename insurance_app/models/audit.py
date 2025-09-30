@@ -4,7 +4,7 @@ from datetime import datetime
 
 class AuditLog(Base):
     __tablename__ = "audit_logs"
-
+    __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, index=True)
     action = Column(String(100), nullable=False)
     user_id = Column(Integer, nullable=False)
@@ -12,5 +12,6 @@ class AuditLog(Base):
     entity_id = Column(Integer, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
     details = Column(Text, nullable=True)
+
 
 
