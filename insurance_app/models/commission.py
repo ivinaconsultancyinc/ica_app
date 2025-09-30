@@ -4,7 +4,7 @@ from insurance_app.database import Base
 
 class Commission(Base):
     __tablename__ = "commissions"
-
+    __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, index=True)
     agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False)
     policy_id = Column(Integer, ForeignKey("policies.id"), nullable=False)
@@ -14,4 +14,5 @@ class Commission(Base):
     # Relationships
     agent = relationship("Agent", back_populates="commissions")
     policy = relationship("Policy", back_populates="commissions")
+
 
