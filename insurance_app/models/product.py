@@ -5,11 +5,12 @@ import uuid
 
 class Product(Base):
     __tablename__ = "products"
-
+    __table_args__ = {'extend_existing': True}
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     name = Column(String, nullable=False)
     type = Column(Enum("Life", "Non-Life", "Group Life", "Group Medical", name="product_type_enum"), nullable=False)
     description = Column(Text, nullable=True)
     rate_table = Column(JSON, nullable=True)  # JSON structure for premium calculation
     status = Column(Enum("Active", "Inactive", name="product_status_enum"), default="Active")
+
 
