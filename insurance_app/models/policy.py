@@ -5,7 +5,7 @@ import uuid
 
 class Policy(Base):
     __tablename__ = "policies"
-
+    __table_args__ = {'extend_existing': True}
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     client_id = Column(UUID(as_uuid=True), ForeignKey("clients.id"), nullable=False)
     product_id = Column(UUID(as_uuid=True), ForeignKey("products.id"), nullable=False)
@@ -15,3 +15,4 @@ class Policy(Base):
     currency = Column(String(3), nullable=False)  # e.g., USD or LRD
     sum_assured = Column(Numeric, nullable=False)
     premium_frequency = Column(Enum("Monthly", "Quarterly", "Annually", name="premium_frequency_enum"), nullable=False)
+
