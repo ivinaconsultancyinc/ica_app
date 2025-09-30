@@ -10,7 +10,7 @@ class AgentStatusEnum(str, enum.Enum):
 
 class Agent(Base):
     __tablename__ = "agents"
-
+    __table_args__ = {'extend_existing': True}
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
@@ -23,4 +23,5 @@ class Agent(Base):
     # Relationships
     policies = relationship("Policy", back_populates="agent", cascade="all, delete-orphan")
     commissions = relationship("Commission", back_populates="agent", cascade="all, delete-orphan")
+
 
