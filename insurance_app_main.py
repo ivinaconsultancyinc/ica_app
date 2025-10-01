@@ -62,6 +62,8 @@ from insurance_app.routers.routers_reinsurance import router as reinsurance_rout
 
 from insurance_app.routers.routers_dashboard import router as dashboard_router
 
+from insurance_app.routers.routers_user import router as user_router
+
 app = FastAPI(title="Insurance Company of Africa Management System")
 
 app.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboard"])
@@ -117,6 +119,8 @@ app.include_router(audit_router, prefix="/audit", tags=["Audit"])
 app.include_router(ledger_router, prefix="/ledger", tags=["Ledger"])
 
 app.include_router(reinsurance_router, prefix="/reinsurance", tags=["Reinsurance"])
+
+app.include_router(user_router, prefix="/user", tags=["User"])
 
 if views_router:
 
@@ -292,6 +296,18 @@ async def reinsurance_page(request: Request, db: Session = Depends(get_db), role
 
     return response
 
+@app.get("/users", response_class=HTMLResponse)
+
+async def users_page(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+
+    users = db.query(User).all()
+
+    response = templates.TemplateResponse("user.html", {"request": request, "role": role, "users": users})
+
+    response.set_cookie(key="session", value=session, max_age=SESSION_TIMEOUT)
+
+    return response
+
 # --- LOGIN ROUTES WITH REAL USER DATABASE ---
 
 @app.get("/login", response_class=HTMLResponse)
@@ -391,4 +407,5 @@ async def health_check():
 # (All your other API endpoints remain unchanged)
 
  
+
 
