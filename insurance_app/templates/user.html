@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}User Management | Insurance Company of Africa{% endblock %}
+
+{% block content %}
+
+ 
+
+### 👤 User Management
+
+#### Manage system users, roles, and access
+
+ 
+
+Easily add, edit, and remove users. Assign roles and manage authentication for secure access to the platform.
+
+ 
+
+<div class="user-actions">
+
+    /usersView All Users</a>
+
+    /users/createAdd New User</a>
+
+</div>
+
+ 
+
+<table class="table table-striped mt-4">
+
+    <thead>
+
+        <tr>
+
+            <th>User Name</th>
+
+            <th>Email</th>
+
+            <th>Role</th>
+
+            <th>Status</th>
+
+            <th>Actions</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for user in users %}
+
+        <tr>
+
+            <td>{{ user.username }}</td>
+
+            <td>{{ user.email }}</td>
+
+            <td>{{ user.role }}</td>
+
+            <td>{{ user.status }}</td>
+
+            <td>
+
+                /users/{{ user.id }}View</a>
+
+                <a href="/users/{{ useritEdit</a>
+
+                <a href="/users/{{ user.id }}/delete" class="btn btntd>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+ 
+
+{% endblock %}
+
