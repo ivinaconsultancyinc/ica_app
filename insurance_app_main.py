@@ -66,6 +66,14 @@ from insurance_app.routers.routers_user import router as user_router
 
 app = FastAPI(title="Insurance Company of Africa Management System")
 
+from fastapi.responses import Response
+
+@app.head("/")
+
+async def head_root():
+
+    return Response()
+
 app.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboard"])
 
 # --- Optional: include views router if present ---
@@ -168,11 +176,35 @@ def check_session(session: str = Cookie(None)):
 
 @app.get("/", response_class=HTMLResponse)
 
-async def read_root(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Depends(check_session)):
+async def read_root(request: Request, db: Session = Depends(get_db), role: str = Cookie(None), session: str = Cookie(None)):
+
+    # If no session or role, redirect to login
+
+    if not session or not role:
+
+        return RedirectResponse(url="/login", status_code=302)
+
+    # Optional: session expiry check
+
+    try:
+
+        last_active = int(session)
+
+        now = int(time.time())
+
+        if now - last_active > SESSION_TIMEOUT:
+
+            return RedirectResponse(url="/login", status_code=302)
+
+    except:
+
+        return RedirectResponse(url="/login", status_code=302)
+
+    # Valid session - show dashboard
 
     response = templates.TemplateResponse("index.html", {"request": request, "role": role})
 
-    response.set_cookie(key="session", value=session, max_age=SESSION_TIMEOUT)
+    response.set_cookie(key="session", value=str(int(time.time())), max_age=SESSION_TIMEOUT)
 
     return response
 
@@ -407,5 +439,6 @@ async def health_check():
 # (All your other API endpoints remain unchanged)
 
  
+
 
 
