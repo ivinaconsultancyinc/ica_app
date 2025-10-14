@@ -4,103 +4,52 @@
 
 {% block content %}
 
-<div style="max-width:350px; margin:40px auto; background:#fff; padding:32px 28px 24px 28px; border-radius:8px; box-shadow:0 2px 12px #0001;"></div style="max-width:350px; margin:40px auto; background:#fff; padding:32px 28px 24px 28px; border-radius:8px; box-shadow:0 2px 12px #0001;">
+<div class="login-container">
 
-    <div style="text-align:center; margin-bottom:20px;"></div style="text-align:center; margin-bottom:20px;">
+    /static/logo.png
 
-        /static/logo.png
-
-        <h2 style="margin:10px 0 0 0;">Sign In</h2 style="margin:10px 0 0 0;">
-
- 
+    <h3>Sign In</h3>
 
     {% if error %}
 
-        <div style="color: #b71c1c; background: #ffebee; border: 1px solid #b71c1c; padding: 10px; margin-bottom: 20px; border-radius: 4px;"></div style="color: #b71c1c; background: #ffebee; border: 1px solid #b71c1c; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
-
-            {{ error }}
-
-        
+        <div class="error">{{ error }}</div>
 
     {% endif %}
 
     /login
 
-        <label for="username" style="font-weight:500;">👤 Username
-</label for="username" style="font-weight:500;">
+        <label for="username">Username</label>
 
-        <input type="text" id="username" name="username" required style="width:100%; padding:10px; margin-bottom:16px; border-radius:4px; border:1px solid #ccc;">
-</input type="text" id="username" name="username" required style="width:100%; padding:10px; margin-bottom:16px; border-radius:4px; border:1px solid #ccc;">
+        <input type="text" name="username" id="username" required>
 
-        
+        <label for="password">Password</label>
 
-        <label for="password" style="font-weight:500;">🔒 Password
-</label for="password" style="font-weight:500;">
+        <input type="password" name="password" id="password" required>
 
-        <input type="password" id="password" name="password" required style="width:100%; padding:10px; margin-bottom:10px; border-radius:4px; border:1px solid #ccc;">
-</input type="password" id="password" name="password" required style="width:100%; padding:10px; margin-bottom:10px; border-radius:4px; border:1px solid #ccc;">
+        <label>
 
-        
+            <input type="checkbox" name="remember_me"> Remember me
 
-        <label style="display:flex; align-items:center; margin-bottom:16px;"></label style="display:flex; align-items:center; margin-bottom:16px;">
+        </label>
 
-            <input type="checkbox" name="remember_me" style="margin-right:8px;"></input type="checkbox" name="remember_me" style="margin-right:8px;">
+        <button type="submit">Sign In</button>
 
-            Remember me
+    </form>
 
-        
+    <div class="social-login">
 
-        
+        <span>or sign in with</span>
 
-        <button type="submit" style="width:100%; background:#1a237e; color:#fff; border:none; padding:12px 0; border-radius:4px; font-size:1.1em; cursor:pointer;"></button type="submit" style="width:100%; background:#1a237e; color:#fff; border:none; padding:12px 0; border-radius:4px; font-size:1.1em; cursor:pointer;">
+        <a href="/auth/googleoogle_icon.png</a>
 
-            <span style="font-size:1.2em;">➡️ Sign In</span style="font-size:1.2em;">
+        /auth/facebook<imgtic/facebook_icon.png</a>
 
-        
+        /auth/microsoft<img src="/static/microsoft/a>
 
-    
+    </div>
 
-    <div style="margin:20px 0; text-align:center;"></div style="margin:20px 0; text-align:center;">
+    /reset-passwordForgot your password?</a>
 
-        <span style="color:#888;">or sign in with</span style="color:#888;">
-
-        <div style="margin-top:10px;"></div style="margin-top:10px;">
-
-            /auth/google
-
-                /static/google_icon.png
-
-                Google
-
-            
-
-            /auth/facebook
-
-                /static/facebook_icon.png
-
-                Facebook
-
-            
-
-            /auth/microsoft
-
-                /static/microsoft_icon.png
-
-                Microsoft
-
-            
-
-        
-
-    
-
-    <p style="margin-top:18px; text-align:center;"></p style="margin-top:18px; text-align:center;">
-
-        /reset-passwordForgot your password?
-
-    
+</div>
 
 {% endblock %}
-
- 
-
