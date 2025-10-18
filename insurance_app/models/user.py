@@ -1,35 +1,68 @@
-from sqlalchemy import Column, String, Enum, DateTime
+from insurance_app.database import SessionLocal
 
-from sqlalchemy.dialects.postgresql import UUID
+from insurance_app.models.models import User
 
-from insurance_app.database import Base
-
-import uuid
-
-import datetime
+from passlib.context import CryptContext
 
  
 
-class User(Base):
-
-    __tablename__ = "users"
-
-    __table_args__ = {'extend_existing': True}
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
  
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+def create_test_user():
 
-    username = Column(String, unique=True, nullable=False, index=True)
+    db = SessionLocal()
 
-    password_hash = Column(String, nullable=False)
+    username = "testuser"
 
-    role = Column(Enum("admin", "manager", "agent", "customer", name="user_role_enum"), nullable=False)
+    password = "testpass"
 
-    email = Column(String, unique=True, nullable=False)
+    hashed_password = pwd_context.hash(password)
 
-    status = Column(Enum("Active", "Inactive", "Blocked", name="user_status_enum"), default="Active")
+    role = "admin"
 
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    email = "testuser@example.com"
 
-    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    status = "Active"
+
+ 
+
+    # Check if user already exists
+
+    user = db.query(User).filter(User.username == username).first()
+
+    if not user:
+
+        user = User(
+
+            username=username,
+
+            password_hash=hashed_password,
+
+            role=role,
+
+            email=email,
+
+            status=status
+
+        )
+
+        db.add(user)
+
+        db.commit()
+
+        print("Test user created.")
+
+    else:
+
+        print("Test user already exists.")
+
+    db.close()
+
+ 
+
+if __name__ == "__main__":
+
+    create_test_user()
+
