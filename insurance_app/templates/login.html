@@ -4,40 +4,38 @@
 
 {% block content %}
 
-<div class="login-container">
+<div style="text-align:center; margin-top:40px;">
 
-    /static/logo.png
-
-    <h3>Sign In</h3>
-
-    {% if error %}
-
-        <div class="error">{{ error }}</div>
+    <img src="/static/logo.png" alt="Logo" style="height:60px; margin-bottom:20pxcolor:red;">{{ error }}</div>
 
     {% endif %}
 
     /login
 
-        <label for="username">Username</label>
+        <label>Username</label><br>
 
-        <input type="text" name="username" id="username" required>
+        <input type="text" name="username" required><br><br>
 
-        <label for="password">Password</label>
+        <label>Password</label><br>
 
-        <input type="password" name="password" id="password" required>
+        <input type="password" name="password" required><br><br>
 
         <label>
 
             <input type="checkbox" name="remember_me"> Remember me
 
-        </label>
+        </label><br><br>
 
         <button type="submit">Sign In</button>
 
     </form>
+
+    <br>
 
     /reset-passwordForgot your password?</a>
 
 </div>
 
 {% endblock %}
+
+``
