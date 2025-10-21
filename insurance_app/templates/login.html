@@ -1,27 +1,41 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login - Insurance Management</title>
-</head>
-<body>
-    <div class="login-container">
-        <h1>Login</h1>
-        
-        {% if error %}
-            <div class="error-message">
-                {{ error }}
-            </div>
-        {% endif %}
-        
-        <form method="post" action="/login">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <label>
-                <input type="checkbox" name="remember_me" value="1">
-                Remember me
-            </label>
-            <button type="submit">Login</button>
-        </form>
-    </div>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Login | Insurance Company of Africa{% endblock %}
+
+{% block content %}
+
+<div style="text-align:center; margin-top:40px;">
+
+    <img src="/static/logo.png" alt="Logo" style="height:60px; margin-bottom:20pxcolor:red;">{{ error }}</div>
+
+    {% endif %}
+
+    /login
+
+        <label>Username</label><br>
+
+        <input type="text" name="username" required><br><br>
+
+        <label>Password</label><br>
+
+        <input type="password" name="password" required><br><br>
+
+        <label>
+
+            <input type="checkbox" name="remember_me"> Remember me
+
+        </label><br><br>
+
+        <button type="submit">Sign In</button>
+
+    </form>
+
+    <br>
+
+    /reset-passwordForgot your password?</a>
+
+</div>
+
+{% endblock %}
+
+``
