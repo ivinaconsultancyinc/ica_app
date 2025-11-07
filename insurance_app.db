@@ -1,0 +1,75 @@
+from sqlalchemy import Column, Integer, String, create_engine
+
+from sqlalchemy.ext.declarative import declarative_base
+
+from sqlalchemy.orm import sessionmaker
+
+from werkzeug.security import generate_password_hash
+
+ 
+
+# Define the database URL and engine
+
+DATABASE_URL = "sqlite:///insurance_app.db"
+
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
+
+ 
+
+# Define the User model
+
+class User(Base):
+
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    username = Column(String, unique=True, index=True, nullable=False)
+
+    password = Column(String, nullable=False)
+
+ 
+
+# Create the users table
+
+Base.metadata.create_all(bind=engine)
+
+ 
+
+# Add initial users
+
+def add_initial_users():
+
+    db = SessionLocal()
+
+    users = [
+
+        {"username": "admin", "password": generate_password_hash("admin123")},
+
+        {"username": "user1", "password": generate_password_hash("password1")},
+
+        {"username": "user2", "password": generate_password_hash("password2")}
+
+    ]
+
+    for user_data in users:
+
+        user = User(username=user_data["username"], password=user_data["password"])
+
+        db.add(user)
+
+    db.commit()
+
+    db.close()
+
+ 
+
+add_initial_users()
+
+print("Initial users added to insurance_app.db")
+
+ 
